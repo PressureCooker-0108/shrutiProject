@@ -6,6 +6,7 @@ import { X, Sparkles, Check, ShoppingBag, Sliders, ArrowRight } from "lucide-rea
 import { MenuItem } from "@/data/menu";
 import MenuBook from "./MenuBook";
 import ParallaxCard from "./ParallaxCard";
+import MenuItem3D from "./MenuItem3D";
 
 interface MenuGridProps {
   onCustomizeDrink: (preset: Required<MenuItem>["preset"]) => void;
@@ -73,16 +74,19 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                       className="absolute inset-0 bg-[var(--cold-brew)]/5 blur-md transform translate-z-[-20px] pointer-events-none" 
                     />
 
-                    {/* Interactive floating product image */}
-                    <img
-                      src={selectedItem.image}
-                      alt={selectedItem.name}
+                    {/* Interactive 3D Model Rendering */}
+                    <div
                       style={{
                         transform: "translateZ(50px)",
                         transformStyle: "preserve-3d",
                       }}
-                      className="w-full h-full object-cover rounded-2xl shadow-md transition-all duration-300"
-                    />
+                      className="w-full h-full flex items-center justify-center"
+                    >
+                      <MenuItem3D
+                        category={selectedItem.category}
+                        name={selectedItem.name}
+                      />
+                    </div>
 
                     {/* Floating Glow backdrop */}
                     <div 
