@@ -93,7 +93,7 @@ export default function Home() {
         <span className="text-[8px] font-bold tracking-widest text-[#2C2421]/60 uppercase text-center select-none pointer-events-none">
           Brew Fill
         </span>
-        <div className="glass-card p-3 rounded-2xl bg-white/70 border border-white/50 shadow-md flex items-center justify-center">
+        <div className="glass-card p-3 rounded-2xl bg-background/70 border border-white/50 shadow-md flex items-center justify-center">
           <svg width="36" height="54" viewBox="0 0 36 54" className="overflow-visible">
             <defs>
               {/* Cup inner clip path */}

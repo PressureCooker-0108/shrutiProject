@@ -44,7 +44,7 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[#1E3932]/70 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[var(--cold-brew)]/70 backdrop-blur-md"
           >
             {/* Modal Box */}
             <motion.div
@@ -57,7 +57,7 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
               {/* Close Button */}
               <button
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/40 hover:bg-white/60 border border-white/30 flex items-center justify-center text-[#1E3932] hover:scale-105 transition-all z-10 cursor-pointer"
+                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-background/40 hover:bg-background/60 border border-white/30 flex items-center justify-center text-[var(--cold-brew)] hover:scale-105 transition-all z-10 cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -66,11 +66,11 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                 
                 {/* Left Side: 3D Mouse Parallax Card */}
                 <div className="flex flex-col items-center justify-center py-6">
-                  <ParallaxCard className="w-72 h-72 md:w-80 md:h-80 rounded-[32px] shadow-2xl border-4 border-white/60 bg-white p-3 flex items-center justify-center relative overflow-hidden group">
+                  <ParallaxCard className="w-72 h-72 md:w-80 md:h-80 rounded-[32px] shadow-2xl border-4 border-white/60 bg-background p-3 flex items-center justify-center relative overflow-hidden group">
                     
                     {/* Shadow layer */}
                     <div 
-                      className="absolute inset-0 bg-[#1E3932]/5 blur-md transform translate-z-[-20px] pointer-events-none" 
+                      className="absolute inset-0 bg-[var(--cold-brew)]/5 blur-md transform translate-z-[-20px] pointer-events-none" 
                     />
 
                     {/* Interactive floating product image */}
@@ -94,51 +94,51 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                 {/* Right Side: Details, Nutrition, and Sarcastic Joke */}
                 <div className="space-y-6 md:space-y-8 text-left">
                   <div className="space-y-3">
-                    <span className="px-3 py-1 rounded-full bg-white/50 border border-white/30 text-[9px] font-black uppercase tracking-widest text-[#00704A] inline-block">
+                    <span className="px-3 py-1 rounded-full bg-background/50 border border-white/30 text-[9px] font-black uppercase tracking-widest text-primary inline-block">
                       {selectedItem.category}
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-display font-black text-[#1E3932] leading-none tracking-tight">
+                    <h2 className="text-3xl md:text-5xl font-display font-black text-[var(--cold-brew)] leading-none tracking-tight">
                       {selectedItem.name}
                     </h2>
-                    <p className="text-xs md:text-sm text-[#1E3932]/80 leading-relaxed font-semibold">
+                    <p className="text-xs md:text-sm text-[var(--cold-brew)]/80 leading-relaxed font-semibold">
                       {selectedItem.description}
                     </p>
                   </div>
 
                   {/* Sarcastic Commentary Callout Box */}
-                  <div className="bg-[#1E3932]/5 border-l-4 border-[#00704A] p-4 rounded-r-2xl italic text-xs md:text-sm text-[#1E3932]/90 font-bold shadow-inner">
+                  <div className="bg-[var(--cold-brew)]/5 border-l-4 border-primary p-4 rounded-r-2xl italic text-xs md:text-sm text-[var(--cold-brew)]/90 font-bold shadow-inner">
                     &ldquo;{selectedItem.joke}&rdquo;
                   </div>
 
                   {/* Nutrition Grid */}
                   <div className="space-y-2">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#1E3932]/60">Nutrition Summary</h4>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-[var(--cold-brew)]/60">Nutrition Summary</h4>
                     <div className="grid grid-cols-4 gap-2">
-                      <div className="bg-white/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
-                        <div className="text-[8px] text-[#1E3932]/60 font-bold uppercase">Calories</div>
-                        <div className="text-xs font-black text-[#1E3932]">{selectedItem.calories}</div>
+                      <div className="bg-background/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
+                        <div className="text-[8px] text-[var(--cold-brew)]/60 font-bold uppercase">Calories</div>
+                        <div className="text-xs font-black text-[var(--cold-brew)]">{selectedItem.calories}</div>
                       </div>
-                      <div className="bg-white/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
-                        <div className="text-[8px] text-[#1E3932]/60 font-bold uppercase">Caffeine</div>
-                        <div className="text-xs font-black text-[#1E3932]">{selectedItem.caffeine}</div>
+                      <div className="bg-background/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
+                        <div className="text-[8px] text-[var(--cold-brew)]/60 font-bold uppercase">Caffeine</div>
+                        <div className="text-xs font-black text-[var(--cold-brew)]">{selectedItem.caffeine}</div>
                       </div>
-                      <div className="bg-white/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
-                        <div className="text-[8px] text-[#1E3932]/60 font-bold uppercase">Sugar</div>
-                        <div className="text-xs font-black text-[#1E3932]">{selectedItem.sugar}</div>
+                      <div className="bg-background/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
+                        <div className="text-[8px] text-[var(--cold-brew)]/60 font-bold uppercase">Sugar</div>
+                        <div className="text-xs font-black text-[var(--cold-brew)]">{selectedItem.sugar}</div>
                       </div>
-                      <div className="bg-white/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
-                        <div className="text-[8px] text-[#1E3932]/60 font-bold uppercase">Fat</div>
-                        <div className="text-xs font-black text-[#1E3932]">{selectedItem.fat}</div>
+                      <div className="bg-background/40 backdrop-blur-sm rounded-xl p-2.5 border border-white/20 text-center">
+                        <div className="text-[8px] text-[var(--cold-brew)]/60 font-bold uppercase">Fat</div>
+                        <div className="text-xs font-black text-[var(--cold-brew)]">{selectedItem.fat}</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Price & Action Row */}
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-[#1E3932]/15">
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-[var(--cold-brew)]/15">
                     {/* Add to Order Button */}
                     <button
                       onClick={() => handleAddToCart(selectedItem)}
-                      className="flex-1 py-4 px-6 rounded-2xl bg-[#00704A] text-[#F2F0EB] font-bold text-xs uppercase tracking-wider transition-all hover:bg-[#00704A]/95 hover:scale-102 flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                      className="flex-1 py-4 px-6 rounded-2xl bg-primary text-oat-milk font-bold text-xs uppercase tracking-wider transition-all hover:bg-primary/95 hover:scale-102 flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       {addedItemName === selectedItem.name ? (
                         <>
@@ -157,7 +157,7 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                     {selectedItem.preset && (
                       <button
                         onClick={() => handleCustomizeInLab(selectedItem)}
-                        className="py-4 px-6 rounded-2xl bg-white/80 hover:bg-white text-[#00704A] font-bold text-xs uppercase tracking-wider transition-all hover:scale-102 border border-white/30 flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                        className="py-4 px-6 rounded-2xl bg-background/80 hover:bg-background text-primary font-bold text-xs uppercase tracking-wider transition-all hover:scale-102 border border-white/30 flex items-center justify-center gap-2 shadow-sm cursor-pointer"
                       >
                         <Sliders size={16} />
                         <span>Customize</span>
