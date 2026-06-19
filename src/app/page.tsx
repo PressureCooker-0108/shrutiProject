@@ -81,7 +81,7 @@ export default function Home() {
   const liquidY = useTransform(scrollYProgress, [0, 1], [51, 10]);
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden bg-[#F4F0EB]">
+    <div className="flex flex-col min-h-screen relative overflow-hidden bg-background">
       {/* Drifting glowing ambient background blobs */}
       <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] bg-[#FF2E93]/8 ambient-blob pointer-events-none" />
       <div className="absolute top-[40%] right-[-10%] w-[600px] h-[600px] bg-[#D48C47]/10 ambient-blob pointer-events-none" style={{ animationDelay: "-5s", animationDuration: "25s" }} />
