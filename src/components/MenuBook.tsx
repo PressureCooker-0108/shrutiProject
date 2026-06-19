@@ -330,8 +330,8 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
             {/* Page Flipping 3D overlay wrapper */}
             {isFlipping && targetSpreadIndex !== null && (
               <motion.div
-                initial={{ rotateY: flipDirection === "next" ? 0 : -180 }}
-                animate={{ rotateY: flipDirection === "next" ? -180 : 0 }}
+                initial={{ rotateY: 0 }}
+                animate={{ rotateY: flipDirection === "next" ? -180 : 180 }}
                 transition={{ duration: 0.55, ease: "easeInOut" }}
                 style={{
                   transformOrigin: flipDirection === "next" ? "left center" : "right center",
