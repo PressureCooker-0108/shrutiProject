@@ -22,43 +22,43 @@ interface StoreLocatorProps {
 
 export const STORES: StarbucksStore[] = [
   {
-    id: "pike-place",
-    name: "Pike Place Marketplace",
-    distance: "0.2 miles",
-    address: "1912 Pike Pl, Seattle, WA 98101",
-    waitTime: "3 MINS",
-    queueInfo: "Live preparation queue (4 orders ahead)",
+    id: "kala-ghoda",
+    name: "Starbucks Kala Ghoda",
+    distance: "0.3 km",
+    address: "Elphinstone Building, Horniman Circle, Fort, Mumbai 400001",
+    waitTime: "4 MINS",
+    queueInfo: "Live preparation queue (3 orders ahead)",
     busyLevel: "Low",
-    pinX: 110,
-    pinY: 130,
+    pinX: 200,
+    pinY: 100,
   },
   {
-    id: "pine-street",
-    name: "Pine Street Center",
-    distance: "0.8 miles",
-    address: "700 Pine St, Seattle, WA 98101",
-    waitTime: "9 MINS",
-    queueInfo: "Medium prep queue (11 orders ahead)",
+    id: "churchgate",
+    name: "Starbucks Churchgate",
+    distance: "1.1 km",
+    address: "Stadium House, Veer Nariman Rd, Churchgate, Mumbai 400020",
+    waitTime: "8 MINS",
+    queueInfo: "Medium prep queue (9 orders ahead)",
     busyLevel: "Medium",
-    pinX: 220,
-    pinY: 90,
+    pinX: 80,
+    pinY: 140,
   },
   {
-    id: "downtown-link",
-    name: "Seattle Downtown Link",
-    distance: "1.2 miles",
-    address: "1301 5th Ave, Seattle, WA 98101",
-    waitTime: "14 MINS",
-    queueInfo: "Heavy prep queue (18 orders ahead)",
+    id: "cuffe-parade",
+    name: "Starbucks Cuffe Parade",
+    distance: "2.4 km",
+    address: "President Arcade, Cuffe Parade, Mumbai 400005",
+    waitTime: "15 MINS",
+    queueInfo: "Heavy prep queue (20 orders ahead)",
     busyLevel: "High",
-    pinX: 180,
-    pinY: 220,
+    pinX: 130,
+    pinY: 250,
   },
 ];
 
 export default function StoreLocator({ selectedStoreId, onSelectStore }: StoreLocatorProps) {
   return (
-    <section id="locator" className="py-16 md:py-24 px-6 md:px-8 max-w-7xl mx-auto space-y-12">
+    <section id="store-locator" className="py-16 md:py-24 px-6 md:px-8 max-w-7xl mx-auto space-y-12">
       {/* Section Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs font-bold text-primary tracking-wider uppercase">
@@ -142,7 +142,7 @@ export default function StoreLocator({ selectedStoreId, onSelectStore }: StoreLo
 
             <div className="absolute inset-0 z-10 p-6 flex flex-col justify-between pointer-events-none">
               <span className="text-[10px] uppercase font-bold text-[var(--cold-brew)]/60 tracking-wider">
-                Live Local Coffee Map
+                Live Local Coffee Map (South Mumbai)
               </span>
               <span className="text-[10px] text-[var(--cold-brew)]/40 italic">
                 Interactive Map - Click pins to select store
@@ -162,9 +162,8 @@ export default function StoreLocator({ selectedStoreId, onSelectStore }: StoreLo
 
               {/* Road Map Lines */}
               <g opacity="0.15">
-                {/* Main highway */}
+                {/* Main roads */}
                 <path d="M-10 150 Q 150 120 350 150" fill="none" stroke="var(--cold-brew)" strokeWidth="8" strokeLinecap="round" />
-                {/* Downtown grid streets */}
                 <line x1="60" y1="-10" x2="60" y2="310" stroke="var(--cold-brew)" strokeWidth="4.5" />
                 <line x1="150" y1="-10" x2="150" y2="310" stroke="var(--cold-brew)" strokeWidth="4.5" />
                 <line x1="240" y1="-10" x2="240" y2="310" stroke="var(--cold-brew)" strokeWidth="4.5" />
@@ -174,22 +173,28 @@ export default function StoreLocator({ selectedStoreId, onSelectStore }: StoreLo
               </g>
 
               {/* Green Park Area */}
-              <rect x="25" y="15" width="90" height="90" rx="12" fill="var(--primary)" fillOpacity="0.04" stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
-              <text x="70" y="60" textAnchor="middle" fill="var(--primary)" fillOpacity="0.4" fontSize="8" fontWeight="bold" className="tracking-widest uppercase select-none">
-                Pike Park
+              <rect x="180" y="35" width="80" height="45" rx="8" fill="var(--primary)" fillOpacity="0.04" stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
+              <text x="220" y="60" textAnchor="middle" fill="var(--primary)" fillOpacity="0.4" fontSize="8" fontWeight="bold" className="tracking-widest uppercase select-none">
+                Horniman Circle
               </text>
 
-              {/* Water Bay Area (Seattle Waterfront) */}
+              {/* Oval Maidan Green Area */}
+              <rect x="25" y="65" width="40" height="90" rx="8" fill="var(--primary)" fillOpacity="0.04" stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
+              <text x="45" y="115" textAnchor="middle" transform="rotate(-90 45 115)" fill="var(--primary)" fillOpacity="0.4" fontSize="7.5" fontWeight="bold" className="tracking-widest uppercase select-none">
+                Oval Maidan
+              </text>
+
+              {/* Arabian Sea */}
               <path d="M -20 -20 Q 30 110 -20 320" fill="#9C8EFA" fillOpacity="0.05" stroke="#9C8EFA" strokeWidth="1.5" strokeOpacity="0.2" />
               <text x="15" y="240" textAnchor="middle" transform="rotate(-75 15 240)" fill="#9C8EFA" fillOpacity="0.5" fontSize="8" fontWeight="bold" className="tracking-widest uppercase select-none">
-                Elliott Bay
+                Arabian Sea
               </text>
 
               {/* User Position Beacon */}
               <g>
-                <circle cx="80" cy="180" r="10" fill="#9C8EFA" fillOpacity="0.15" />
-                <circle cx="80" cy="180" r="4.5" fill="#9C8EFA" stroke="#FFFFFF" strokeWidth="1.5" className="animate-pulse" />
-                <text x="80" y="196" textAnchor="middle" fill="var(--cold-brew)" fillOpacity="0.6" fontSize="7" fontWeight="bold" className="tracking-wider uppercase select-none">
+                <circle cx="120" cy="110" r="10" fill="#9C8EFA" fillOpacity="0.15" />
+                <circle cx="120" cy="110" r="4.5" fill="#9C8EFA" stroke="#FFFFFF" strokeWidth="1.5" className="animate-pulse" />
+                <text x="120" y="126" textAnchor="middle" fill="var(--cold-brew)" fillOpacity="0.6" fontSize="7" fontWeight="bold" className="tracking-wider uppercase select-none">
                   Your Location
                 </text>
               </g>
@@ -243,7 +248,7 @@ export default function StoreLocator({ selectedStoreId, onSelectStore }: StoreLo
                       fontWeight="bold"
                       className="pointer-events-none select-none tracking-tight bg-background px-1"
                     >
-                      {store.name.split(" ")[0]}
+                      {store.name.replace("Starbucks ", "")}
                     </text>
                   </g>
                 );

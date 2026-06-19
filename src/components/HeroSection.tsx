@@ -13,9 +13,9 @@ interface HeroSectionProps {
 
 export default function HeroSection({
   onQuickOrder,
-  activeStoreName = "Pike Place Marketplace",
-  activeStoreWaitTime = "3 MINS",
-  activeStoreQueueInfo = "Live preparation queue (4 orders ahead)",
+  activeStoreName = "Starbucks Kala Ghoda",
+  activeStoreWaitTime = "4 MINS",
+  activeStoreQueueInfo = "Live preparation queue (3 orders ahead)",
 }: HeroSectionProps) {
   const [commuterMode, setCommuterMode] = useState(true);
   const [greeting, setGreeting] = useState("Good morning");

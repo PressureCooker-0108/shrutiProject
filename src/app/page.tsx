@@ -21,10 +21,10 @@ export default function Home() {
 
   // State to manage selected Starbucks Store details
   const [activeStore, setActiveStore] = useState({
-    id: "pike-place",
-    name: "Pike Place Marketplace",
-    waitTime: "3 MINS",
-    queueInfo: "Live preparation queue (4 orders ahead)",
+    id: "kala-ghoda",
+    name: "Starbucks Kala Ghoda",
+    waitTime: "4 MINS",
+    queueInfo: "Live preparation queue (3 orders ahead)",
   });
 
   const [cartCount, setCartCount] = useState(0);
