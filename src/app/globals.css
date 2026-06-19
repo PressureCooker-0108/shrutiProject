@@ -22,6 +22,10 @@
   --foreground: #1E3932;
 }
 
+html, body {
+  cursor: url('/coffee-cursor.png') 24 7, auto;
+}
+
 body {
   background-color: #F2F0EB;
   color: #1E3932;
