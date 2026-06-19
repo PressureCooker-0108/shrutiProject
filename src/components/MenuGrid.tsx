@@ -83,6 +83,7 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                       className="w-full h-full flex items-center justify-center"
                     >
                       <MenuItem3D
+                        id={selectedItem.id}
                         category={selectedItem.category}
                         name={selectedItem.name}
                       />
@@ -152,7 +153,7 @@ export default function MenuGrid({ onCustomizeDrink, onAddToCart }: MenuGridProp
                       ) : (
                         <>
                           <ShoppingBag size={16} />
-                          <span>Add to Order • ${selectedItem.price.toFixed(2)}</span>
+                           <span>Add to Order • ₹{selectedItem.price}</span>
                         </>
                       )}
                     </button>

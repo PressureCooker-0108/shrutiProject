@@ -142,7 +142,7 @@ export default function HeroSection({
                       Venti • Oat Milk • Lavender Foam
                     </p>
                   </div>
-                  <span className="text-sm font-black text-[var(--cold-brew)]">$6.75</span>
+                  <span className="text-sm font-black text-[var(--cold-brew)]">₹540</span>
                 </div>
 
                 <AnimatePresence mode="wait">

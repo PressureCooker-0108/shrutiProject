@@ -85,7 +85,7 @@ export default function Navigation({ cartCount = 0 }: NavigationProps) {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2.5 hover-scale transition-custom">
             <img
-              src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
+              src="/siren-logo.png"
               alt="Starbucks Logo"
               className="w-9 h-9"
             />

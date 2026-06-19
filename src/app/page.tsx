@@ -98,15 +98,16 @@ export default function Home() {
             <defs>
               {/* Cup inner clip path */}
               <clipPath id="scroll-cup-clip">
-                <path d="M 9 10 L 27 10 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z" />
+                <path d="M 9 12 L 27 12 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z" />
               </clipPath>
             </defs>
 
-            {/* Cup empty inner background */}
+            {/* Cup empty inner background (White paper look!) */}
             <path
-              d="M 9 10 L 27 10 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z"
-              fill="#2C2421"
-              fillOpacity="0.06"
+              d="M 9 12 L 27 12 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z"
+              fill="#FFFFFF"
+              stroke="#2C2421"
+              strokeWidth="1.8"
             />
 
             {/* Liquid fill reacting to scroll */}
@@ -121,55 +122,40 @@ export default function Home() {
               />
             </g>
 
-            {/* Cup cardboard sleeve */}
-            <path
-              d="M 10.3 22 L 25.7 22 L 24.3 38 L 11.7 38 Z"
-              fill="#C68B59"
-              stroke="#2C2421"
-              strokeWidth="0.8"
-              strokeOpacity="0.25"
-            />
-
-            {/* Green Siren logo emblem on the sleeve */}
-            <circle cx="18" cy="30" r="4" fill="#2B4D3D" />
-            <circle cx="18" cy="30" r="1.5" fill="#FAF8F5" />
-
-            {/* Glass shine highlight */}
-            <path
-              d="M 9 10 L 15 10 L 17 48 L 16 48 Z"
-              fill="#FAF8F5"
-              fillOpacity="0.25"
-              pointerEvents="none"
-            />
-
             {/* Cup Outer Outline */}
             <path
-              d="M 9 10 L 27 10 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z"
+              d="M 9 12 L 27 12 L 23 48 A 3 3 0 0 1 20 51 L 16 51 A 3 3 0 0 1 13 48 Z"
               fill="none"
               stroke="#2C2421"
-              strokeWidth="2.2"
-              strokeOpacity="0.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-            {/* Cup plastic lid flat top */}
-            <path
-              d="M 7 10 L 29 10 L 28 8 A 1.2 1.2 0 0 0 26.8 6.8 L 9.2 6.8 A 1.2 1.2 0 0 0 8 8 Z"
-              fill="#FAF8F5"
-              stroke="#2C2421"
               strokeWidth="1.8"
-              strokeOpacity="0.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
 
-            {/* Cup plastic lid sip spout plug */}
+            {/* Circular Green Siren Logo emblem using the uploaded logo */}
+            <image href="/siren-logo.png" x="12.5" y="24.5" width="11" height="11" />
+
+            {/* Cup plastic lid with rim lip extending outwards and raised center mouthpiece */}
+            {/* Flange rim lip */}
             <path
-              d="M 16 6.8 L 20 6.8 L 19.2 4.8 L 16.8 4.8 Z"
-              fill="#2C2421"
-              fillOpacity="0.8"
+              d="M 6.5 12 L 29.5 12 L 28.5 9.5 L 7.5 9.5 Z"
+              fill="#FFFFFF"
+              stroke="#2C2421"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
+            {/* Raised center dome */}
+            <path
+              d="M 10 9.5 L 26 9.5 L 24 5.5 L 12 5.5 Z"
+              fill="#FFFFFF"
+              stroke="#2C2421"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Sipper spout highlight */}
+            <rect x="16" y="4.5" width="4" height="1.5" rx="0.5" fill="#2B4D3D" />
           </svg>
         </div>
       </div>
@@ -210,10 +196,10 @@ export default function Home() {
       <footer className="w-full bg-[#2C2421] text-[#F4F0EB]/60 py-12 px-6 border-t border-[#2C2421]/15 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
+             <img
+              src="/siren-logo.png"
               alt="Starbucks Logo"
-              className="w-8 h-8 brightness-0 invert"
+              className="w-8 h-8"
             />
             <span className="text-xl font-display font-black tracking-widest text-[#FAF8F5]">
               STARBUCKS

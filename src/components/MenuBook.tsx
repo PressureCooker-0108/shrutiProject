@@ -43,28 +43,28 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
       title: "Signature Coffee",
       category: "Coffee",
       leftPageItems: coffeeItems.slice(0, 2),
-      rightPageItems: coffeeItems.slice(2, 4),
+      rightPageItems: coffeeItems.slice(2, 5),
     },
     {
       id: "tea",
       title: "Earthy Teas & Matchas",
       category: "Tea & Matcha",
       leftPageItems: teaItems.slice(0, 2),
-      rightPageItems: teaItems.slice(2, 4),
+      rightPageItems: teaItems.slice(2, 5),
     },
     {
       id: "refresher",
       title: "Vibrant Refreshers",
       category: "Refresher",
       leftPageItems: refresherItems.slice(0, 2),
-      rightPageItems: refresherItems.slice(2, 3), // Pink drink
+      rightPageItems: refresherItems.slice(2, 3), // Pink drink, Strawberry acai, Blue coconut
     },
     {
       id: "frap",
       title: "Ice-Blended Frappuccinos",
       category: "Frappuccino",
       leftPageItems: frapItems.slice(0, 2),
-      rightPageItems: frapItems.slice(2, 5),
+      rightPageItems: frapItems.slice(2, 4),
     },
     {
       id: "food-savory",
@@ -134,9 +134,9 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
           <div className="space-y-6 max-w-md relative z-10 group-hover:scale-102 transition-transform duration-500">
             <div className="flex justify-center">
               <img
-                src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
+                src="/siren-logo.png"
                 alt="Starbucks Siren"
-                className="w-20 h-20 md:w-28 md:h-28 brightness-0 invert"
+                className="w-20 h-20 md:w-28 md:h-28"
               />
             </div>
             <div className="space-y-2">
@@ -217,7 +217,7 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
                       {item.name}
                     </h5>
                     <span className="text-[9px] uppercase font-bold text-[var(--cold-brew)]/50 tracking-wide mt-1 inline-block">
-                      ${item.price.toFixed(2)} • {item.calories} cal
+                      ₹{item.price} • {item.calories} cal
                     </span>
                   </div>
                 </div>

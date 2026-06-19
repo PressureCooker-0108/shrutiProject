@@ -156,33 +156,82 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     const stirrerPivot = new THREE.Group();
     scene.add(stirrerPivot);
 
-    // 1. Cup Glass Cylinder
-    const glassGeo = new THREE.CylinderGeometry(1.5, 1.1, 4.4, 32, 1, true);
+    // 1. Cup Frosted Paper Cylinder (looks white like paper but translucent enough to see drink color)
+    const glassGeo = new THREE.CylinderGeometry(1.48, 1.08, 4.4, 32, 1, false);
     const glassMat = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.22,
-      transmission: 0.9,
-      roughness: 0.15,
-      metalness: 0.1,
-      ior: 1.5,
+      opacity: 0.58, // slightly opaque white paper look
+      transmission: 0.45, // lets drink color glow through
+      roughness: 0.4,
+      metalness: 0.05,
+      ior: 1.45,
       side: THREE.DoubleSide,
-      depthWrite: false
+      depthWrite: true
     });
     const glassMesh = new THREE.Mesh(glassGeo, glassMat);
     cupGroup.add(glassMesh);
 
-    // Cup Solid Base
-    const baseGeo = new THREE.CylinderGeometry(1.1, 1.05, 0.18, 32);
-    const baseMat = new THREE.MeshPhysicalMaterial({
+    // Cup Solid Base (White paper bottom)
+    const baseGeo = new THREE.CylinderGeometry(1.08, 1.05, 0.12, 32);
+    const baseMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      transparent: true,
-      opacity: 0.35,
-      roughness: 0.1
+      roughness: 0.6
     });
     const baseMesh = new THREE.Mesh(baseGeo, baseMat);
     baseMesh.position.y = -2.2;
     cupGroup.add(baseMesh);
+
+    // 1b. White Plastic Hot Lid (Classic Starbucks hot cup lid)
+    const lidGroup = new THREE.Group();
+    lidGroup.position.y = 2.2; // at the top rim of the cup
+
+    const lidMat = new THREE.MeshStandardMaterial({
+      color: 0xf6f6f6, // clean white plastic
+      roughness: 0.22
+    });
+
+    // Lid Rim Flange (lip extending outwards)
+    const flange = new THREE.Mesh(new THREE.CylinderGeometry(1.58, 1.58, 0.14, 32), lidMat);
+    flange.position.y = 0.07;
+    lidGroup.add(flange);
+
+    // Lid Vertical Riser / Slope
+    const riser = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.52, 0.28, 32), lidMat);
+    riser.position.y = 0.26;
+    lidGroup.add(riser);
+
+    // Lid Top Cap
+    const topCap = new THREE.Mesh(new THREE.CylinderGeometry(1.38, 1.42, 0.06, 32), lidMat);
+    topCap.position.y = 0.42;
+    lidGroup.add(topCap);
+
+    // Lid Sipping Spout highlight
+    const spout = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.08, 0.18), new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.3 }));
+    spout.position.set(0, 0.46, 1.25);
+    lidGroup.add(spout);
+
+    cupGroup.add(lidGroup);
+
+    // 1c. 3D Starbucks Circular Siren Logo on the front of the cup using the custom uploaded logo
+    const logoGroup = new THREE.Group();
+    logoGroup.position.set(0, -0.2, 1.34); // sitting on front face, slightly lower
+    logoGroup.rotation.x = Math.PI / 18; // tilt slightly for tapered cup surface
+
+    const textureLoader = new THREE.TextureLoader();
+    const logoTexture = textureLoader.load("/siren-logo.png");
+
+    const logoGeo = new THREE.CircleGeometry(0.55, 32);
+    const logoMat = new THREE.MeshStandardMaterial({
+      map: logoTexture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      roughness: 0.35
+    });
+    const logoMesh = new THREE.Mesh(logoGeo, logoMat);
+    logoGroup.add(logoMesh);
+
+    cupGroup.add(logoGroup);
 
     // 2. Liquid Cylinder
     const liquidGeo = new THREE.CylinderGeometry(1.44, 1.08, 4.0, 32);
@@ -567,61 +616,61 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     { id: "Extra Ice", name: "Extra Ice", sub: "Maximum cold" },
   ];
 
-  // Compute stats based on options
+  // Compute stats based on options (INR prices)
   const getStats = () => {
-    let price = 4.95;
+    let price = 395;
     let calories = 90;
     let caffeine = 140;
 
     // Base modifications
     if (customization.base === "Matcha Green") {
-      price = 5.45;
+      price = 435;
       calories = 110;
       caffeine = 75;
     } else if (customization.base === "Dragonfruit Refresher") {
-      price = 5.25;
+      price = 420;
       calories = 85;
       caffeine = 40;
     } else if (customization.base === "Caramel Gold") {
-      price = 5.75;
+      price = 460;
       calories = 150;
       caffeine = 100;
     }
 
     // Size modifications
     if (customization.size === "Tall") {
-      price -= 0.50;
+      price -= 40;
       calories -= 20;
       caffeine -= 30;
     } else if (customization.size === "Venti") {
-      price += 0.60;
+      price += 50;
       calories += 30;
       caffeine += 40;
     }
 
     // Milk modifications
     if (customization.milk !== "None") {
-      price += 0.50;
+      price += 40;
       calories += 50;
     }
 
     // Sweetener modifications
     if (customization.sweetener !== "None") {
-      price += 0.40;
+      price += 30;
       calories += 40;
     }
 
     // Toppings modifications
     if (customization.topping === "Cold Foam" || customization.topping === "Whipped Cream") {
-      price += 0.70;
+      price += 60;
       calories += 70;
     } else if (customization.topping === "Cinnamon") {
-      price += 0.10;
+      price += 10;
       calories += 5;
     }
 
     return {
-      price: price.toFixed(2),
+      price: price.toFixed(0),
       calories,
       caffeine,
     };
@@ -853,7 +902,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               </div>
               
               <div className="px-4 py-2 rounded-full bg-oat-milk/10 border border-oat-milk/10 text-base font-extrabold text-oat-milk">
-                ${price}
+                ₹{price}
               </div>
             </div>
 
@@ -893,9 +942,9 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
             style={{ background: canvasBg, borderColor: canvasBorder }}
           >
             {/* Ambient Starbucks Siren logo backdrop */}
-            <div className="absolute top-6 left-6 opacity-5 pointer-events-none">
+            <div className="absolute top-6 left-6 opacity-8 pointer-events-none">
               <img
-                src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
+                src="/siren-logo.png"
                 alt="Starbucks Logo"
                 className="w-12 h-12"
               />
