@@ -23,7 +23,7 @@
 }
 
 html, body, button, a, [role="button"], .cursor-pointer, input, select, textarea {
-  cursor: url('/coffee-cursor.png') 14 0, auto;
+  cursor: url('/coffee-cursor.png') 31 1, auto;
 }
 
 body {
