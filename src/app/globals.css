@@ -22,7 +22,7 @@
   --foreground: #1E3932;
 }
 
-html, body {
+html, body, button, a, [role="button"], .cursor-pointer, input, select, textarea {
   cursor: url('/coffee-cursor.png') 24 7, auto;
 }
 
