@@ -41,17 +41,17 @@ export default function HeroSection({
       
       {/* Hero Content Column */}
       <div className="flex-1 space-y-8 text-left relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#2B4D3D]/10 text-[#2B4D3D] text-xs font-bold tracking-widest uppercase">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00704A]/10 text-[#00704A] text-xs font-bold tracking-widest uppercase">
           <Sparkles size={12} className="text-[#C68B59]" />
           <span>Starbucks Digital Rebrand</span>
         </div>
         
-        <h1 className="text-6xl md:text-8xl font-display font-black text-[#2C2421] leading-[1.05] tracking-tight">
+        <h1 className="text-6xl md:text-8xl font-display font-black text-[#1E3932] leading-[1.05] tracking-tight">
           {greeting}, <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2B4D3D] via-[#3E6B56] to-[#C68B59]">Commuter</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00704A] via-[#1E3932] to-[#00704A]">Commuter</span>
         </h1>
         
-        <p className="text-[#2C2421]/80 max-w-xl text-base md:text-lg leading-relaxed font-medium">
+        <p className="text-[#1E3932]/80 max-w-xl text-base md:text-lg leading-relaxed font-medium">
           Welcome to the new digital destination. Switch on Commuter Mode for instant queue times and one-tap reorders, or scroll down to brew your mood.
         </p>
 
@@ -61,11 +61,11 @@ export default function HeroSection({
             onClick={() => setCommuterMode(true)}
             className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-custom hover-scale flex items-center gap-2 ${
               commuterMode
-                ? "bg-[#2C2421] text-[#F4F0EB] shadow-md"
-                : "bg-white/40 text-[#2C2421]/80 hover:text-[#2C2421] hover:bg-white/60 border border-white/40"
+                ? "bg-[#1E3932] text-[#F2F0EB] shadow-md"
+                : "bg-white/40 text-[#1E3932]/80 hover:text-[#1E3932] hover:bg-white/60 border border-white/40"
             }`}
           >
-            <Zap size={13} className={commuterMode ? "fill-[#F4F0EB] text-[#F4F0EB]" : ""} />
+            <Zap size={13} className={commuterMode ? "fill-[#F2F0EB] text-[#F2F0EB]" : ""} />
             <span>Commuter Mode</span>
           </button>
           
@@ -73,8 +73,8 @@ export default function HeroSection({
             onClick={() => setCommuterMode(false)}
             className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-custom hover-scale ${
               !commuterMode
-                ? "bg-[#2C2421] text-[#F4F0EB] shadow-md"
-                : "bg-white/40 text-[#2C2421]/80 hover:text-[#2C2421] hover:bg-white/60 border border-white/40"
+                ? "bg-[#1E3932] text-[#F2F0EB] shadow-md"
+                : "bg-white/40 text-[#1E3932]/80 hover:text-[#1E3932] hover:bg-white/60 border border-white/40"
             }`}
           >
             Explore Menu
@@ -97,32 +97,32 @@ export default function HeroSection({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-              className="w-full rounded-[40px] p-8 glass-card space-y-6 relative overflow-hidden"
+              className="w-full rounded-[40px] p-8 glass-card space-y-6 relative overflow-hidden animate-glow"
             >
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-[#2C2421]/10 pb-4">
+              <div className="flex items-center justify-between border-b border-[#1E3932]/10 pb-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#FF2E93] animate-ping" />
-                  <span className="text-[10px] font-bold text-[#2C2421]/60 tracking-widest uppercase">
+                  <span className="text-[10px] font-bold text-[#1E3932]/60 tracking-widest uppercase">
                     Live Store Status
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[#2C2421]/70 text-xs font-bold uppercase tracking-wider">
-                  <MapPin size={12} className="text-[#2B4D3D]" />
+                <div className="flex items-center gap-1.5 text-[#1E3932]/70 text-xs font-bold uppercase tracking-wider">
+                  <MapPin size={12} className="text-[#00704A]" />
                   <span>{activeStoreName}</span>
                 </div>
               </div>
 
               {/* Live Queue Time Visualizer */}
               <div className="flex items-center gap-5 py-2">
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-[#2B4D3D] to-[#1E3B2F] text-[#F4F0EB] shadow-md shadow-[#2B4D3D]/15">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-[#00704A] to-[#1E3932] text-[#F2F0EB] shadow-md shadow-[#00704A]/15">
                   <Clock size={28} />
                 </div>
                 <div>
-                  <div className="text-4xl font-display font-black text-[#2C2421] tracking-tight leading-none">
+                  <div className="text-4xl font-display font-black text-[#1E3932] tracking-tight leading-none">
                     {activeStoreWaitTime} WAIT
                   </div>
-                  <div className="text-xs text-[#2C2421]/70 mt-1.5 font-medium">
+                  <div className="text-xs text-[#1E3932]/70 mt-1.5 font-medium">
                     {activeStoreQueueInfo}
                   </div>
                 </div>
@@ -135,14 +135,14 @@ export default function HeroSection({
                     <span className="text-[9px] uppercase font-black tracking-wider text-[#C68B59]">
                       Your Daily Ritual
                     </span>
-                    <h3 className="font-extrabold text-sm text-[#2C2421] mt-0.5">
+                    <h3 className="font-extrabold text-sm text-[#1E3932] mt-0.5">
                       Iced Matcha Cold Foam Latte
                     </h3>
-                    <p className="text-xs text-[#2C2421]/60 mt-0.5 font-medium">
+                    <p className="text-xs text-[#1E3932]/60 mt-0.5 font-medium">
                       Venti • Oat Milk • Lavender Foam
                     </p>
                   </div>
-                  <span className="text-sm font-black text-[#2C2421]">$6.75</span>
+                  <span className="text-sm font-black text-[#1E3932]">$6.75</span>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -151,7 +151,7 @@ export default function HeroSection({
                       initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.95, opacity: 0 }}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-[#2B4D3D] to-[#1E3B2F] text-[#F4F0EB] flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider shadow-md"
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-[#00704A] to-[#1E3932] text-[#F2F0EB] flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider shadow-md"
                     >
                       <CheckCircle2 size={16} className="text-[#9C8EFA]" />
                       <span>Order Placed! Warming up Cup</span>
@@ -161,9 +161,9 @@ export default function HeroSection({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleQuickReorder}
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-[#2B4D3D] to-[#1E3B2F] text-[#F4F0EB] flex items-center justify-center gap-2 text-xs font-black uppercase tracking-wider transition-custom hover-scale shadow-md shadow-[#2B4D3D]/10 hover:shadow-[#2B4D3D]/25 cursor-pointer"
+                      className="w-full py-4 rounded-xl bg-gradient-to-r from-[#00704A] to-[#1E3932] text-[#F2F0EB] flex items-center justify-center gap-2 text-xs font-black uppercase tracking-wider transition-custom hover-scale shadow-md shadow-[#00704A]/10 hover:shadow-[#00704A]/25 cursor-pointer"
                     >
-                      <Zap size={12} className="fill-[#F4F0EB]" />
+                      <Zap size={12} className="fill-[#F2F0EB]" />
                       <span>One-Tap Reorder</span>
                     </motion.button>
                   )}
@@ -179,20 +179,20 @@ export default function HeroSection({
               transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
               className="w-full rounded-[40px] p-8 glass-card space-y-6 relative overflow-hidden"
             >
-              <h3 className="text-2xl font-display font-black text-[#2C2421] border-b border-[#2C2421]/10 pb-4">
+              <h3 className="text-2xl font-display font-black text-[#1E3932] border-b border-[#1E3932]/10 pb-4">
                 What&apos;s Brewing Today
               </h3>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/50 border border-transparent hover:border-white/40 transition-custom cursor-pointer">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2B4D3D]/15 to-[#2B4D3D]/5 flex items-center justify-center text-xl shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00704A]/15 to-[#00704A]/5 flex items-center justify-center text-xl shadow-inner">
                     🍵
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-bold text-[#2C2421]">Matcha Lavender Latte</h4>
-                    <p className="text-xs text-[#2C2421]/60 font-medium">Creamy, floral, and energizing</p>
+                    <h4 className="text-sm font-bold text-[#1E3932]">Matcha Lavender Latte</h4>
+                    <p className="text-xs text-[#1E3932]/60 font-medium">Creamy, floral, and energizing</p>
                   </div>
-                  <ChevronRight size={16} className="text-[#2C2421]/40" />
+                  <ChevronRight size={16} className="text-[#1E3932]/40" />
                 </div>
 
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/50 border border-transparent hover:border-white/40 transition-custom cursor-pointer">
@@ -200,10 +200,10 @@ export default function HeroSection({
                     🍓
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-bold text-[#2C2421]">Dragonfruit Refresher</h4>
-                    <p className="text-xs text-[#2C2421]/60 font-medium">Crisp, vibrant fruit energy</p>
+                    <h4 className="text-sm font-bold text-[#1E3932]">Dragonfruit Refresher</h4>
+                    <p className="text-xs text-[#1E3932]/60 font-medium">Crisp, vibrant fruit energy</p>
                   </div>
-                  <ChevronRight size={16} className="text-[#2C2421]/40" />
+                  <ChevronRight size={16} className="text-[#1E3932]/40" />
                 </div>
 
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-white/50 border border-transparent hover:border-white/40 transition-custom cursor-pointer">
@@ -211,16 +211,16 @@ export default function HeroSection({
                     ☕
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-bold text-[#2C2421]">Salted Caramel Brew</h4>
-                    <p className="text-xs text-[#2C2421]/60 font-medium">Rich cold brew with sweet foam</p>
+                    <h4 className="text-sm font-bold text-[#1E3932]">Salted Caramel Brew</h4>
+                    <p className="text-xs text-[#1E3932]/60 font-medium">Rich cold brew with sweet foam</p>
                   </div>
-                  <ChevronRight size={16} className="text-[#2C2421]/40" />
+                  <ChevronRight size={16} className="text-[#1E3932]/40" />
                 </div>
               </div>
 
               <a
                 href="#builder"
-                className="block text-center w-full py-4 rounded-xl border-2 border-[#2B4D3D] text-[#2B4D3D] text-xs font-bold uppercase tracking-wider transition-custom hover-scale hover:bg-[#2B4D3D] hover:text-[#F4F0EB] hover:shadow-md"
+                className="block text-center w-full py-4 rounded-xl border-2 border-[#00704A] text-[#00704A] text-xs font-bold uppercase tracking-wider transition-custom hover-scale hover:bg-[#00704A] hover:text-[#F2F0EB] hover:shadow-md"
               >
                 Go to Drink Customizer
               </a>

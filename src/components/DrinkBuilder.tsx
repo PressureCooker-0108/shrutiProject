@@ -186,11 +186,14 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
     // 2. Liquid Cylinder
     const liquidGeo = new THREE.CylinderGeometry(1.44, 1.08, 4.0, 32);
-    const liquidMat = new THREE.MeshStandardMaterial({
+    const liquidMat = new THREE.MeshPhysicalMaterial({
       color: 0x765C4E,
       transparent: true,
       opacity: 0.92,
-      roughness: 0.2
+      roughness: 0.15,
+      metalness: 0.05,
+      transmission: 0.35,
+      thickness: 0.5
     });
     const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat);
     liquidMesh.position.y = -0.1;
@@ -303,21 +306,21 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
       const current = customizationRef.current;
 
       // Update liquid color based on base and milk selections
-      let colorStyle = "#2C2421";
+      let colorStyle = "#3D2314";
       const hasMilk = current.milk !== "None";
       switch (current.base) {
         case "Matcha Green":
-          colorStyle = hasMilk ? "#8CAE93" : "#2B4D3D";
+          colorStyle = hasMilk ? "#A4CBB0" : "#24583B";
           break;
         case "Caramel Gold":
-          colorStyle = hasMilk ? "#C19A6C" : "#916F38";
+          colorStyle = hasMilk ? "#D8BCA0" : "#A07137";
           break;
         case "Dragonfruit Refresher":
-          colorStyle = hasMilk ? "#E46F9E" : "#E0115F";
+          colorStyle = hasMilk ? "#F4B5CD" : "#D81B60";
           break;
         case "Cold Brew":
         default:
-          colorStyle = hasMilk ? "#765C4E" : "#2C2421";
+          colorStyle = hasMilk ? "#B69C85" : "#3D2314";
       }
       liquidMat.color.setStyle(colorStyle);
 
@@ -360,11 +363,15 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
         stirrerPivot.scale.set(1.0, 1.0, 1.0);
       }
 
-      // Adjust milk blend transparency
+      // Adjust milk blend transparency and physical properties
       if (current.milk === "None") {
-        liquidMat.opacity = 0.95;
+        liquidMat.opacity = 0.93;
+        liquidMat.transmission = 0.55; // Nicely translucent
+        liquidMat.roughness = 0.1;
       } else {
-        liquidMat.opacity = 0.85;
+        liquidMat.opacity = 0.98;
+        liquidMat.transmission = 0.05; // Mostly opaque/milky
+        liquidMat.roughness = 0.25;
       }
 
       renderer.render(scene, camera);
@@ -488,30 +495,30 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
   // ── Per-base vivid color styles ──────────────────────────────
   const BASE_STYLES: Record<string, { active: string; inactive: string }> = {
-    "Cold Brew":             { active: "bg-gradient-to-r from-[#2C1810] to-[#5A3020] text-[#FAF0E6] shadow-lg shadow-[#2C1810]/25",  inactive: "bg-[#F7EDE7] text-[#5A3020] border border-[#5A3020]/20 hover:border-[#5A3020]/50 hover:bg-[#EED8C8]" },
-    "Matcha Green":          { active: "bg-gradient-to-r from-[#1A3D28] to-[#2B4D3D] text-[#E0F4E8] shadow-lg shadow-[#2B4D3D]/25",  inactive: "bg-[#E8F5E0] text-[#2B4D3D] border border-[#2B4D3D]/20 hover:border-[#2B4D3D]/50 hover:bg-[#C8E6CC]" },
-    "Caramel Gold":          { active: "bg-gradient-to-r from-[#8B5E00] to-[#D4942A] text-white shadow-lg shadow-[#C68B59]/25",       inactive: "bg-[#FFF4E0] text-[#8B5E00] border border-[#C68B59]/20 hover:border-[#C68B59]/50 hover:bg-[#FFE5B0]" },
-    "Dragonfruit Refresher": { active: "bg-gradient-to-r from-[#7B0040] to-[#E0115F] text-white shadow-lg shadow-[#E0115F]/25",       inactive: "bg-[#FFF0F5] text-[#7B0040] border border-[#E0115F]/20 hover:border-[#E0115F]/50 hover:bg-[#FFCCE0]" },
+    "Cold Brew":             { active: "bg-gradient-to-r from-[#1E3932] to-[#5C4033] text-[#F2F0EB] shadow-lg shadow-[#1E3932]/25",  inactive: "bg-[#F2F0EB] text-[#1E3932] border border-[#1E3932]/20 hover:border-[#1E3932]/50 hover:bg-[#EED8C8]" },
+    "Matcha Green":          { active: "bg-gradient-to-r from-[#00704A] to-[#24583B] text-[#E0F4E8] shadow-lg shadow-[#00704A]/25",  inactive: "bg-[#E8F5E0] text-[#00704A] border border-[#00704A]/20 hover:border-[#00704A]/50 hover:bg-[#C8E6CC]" },
+    "Caramel Gold":          { active: "bg-gradient-to-r from-[#8B5E00] to-[#C68B59] text-white shadow-lg shadow-[#C68B59]/25",       inactive: "bg-[#FFF4E0] text-[#8B5E00] border border-[#C68B59]/20 hover:border-[#C68B59]/50 hover:bg-[#FFE5B0]" },
+    "Dragonfruit Refresher": { active: "bg-gradient-to-r from-[#7B0040] to-[#D81B60] text-white shadow-lg shadow-[#D81B60]/25",       inactive: "bg-[#FFF0F5] text-[#7B0040] border border-[#D81B60]/20 hover:border-[#D81B60]/50 hover:bg-[#FFCCE0]" },
   };
 
   const canvasBg =
     customization.base === "Matcha Green"         ? "linear-gradient(155deg, #E8F5E0 0%, #B8DCC0 55%, #80C090 100%)" :
     customization.base === "Caramel Gold"          ? "linear-gradient(155deg, #FFF4E0 0%, #FFD888 55%, #F0B040 100%)" :
     customization.base === "Dragonfruit Refresher" ? "linear-gradient(155deg, #FFF0F8 0%, #FFB0D0 55%, #FF70A8 100%)" :
-                                                    "linear-gradient(155deg, #F7EDE7 0%, #E0C8B0 55%, #C8A080 100%)";
+                                                    "linear-gradient(155deg, #F2F0EB 0%, #E0C8B0 55%, #C8A080 100%)";
 
   const canvasBorder =
-    customization.base === "Matcha Green"         ? "rgba(43,77,61,0.22)" :
+    customization.base === "Matcha Green"         ? "rgba(0,112,74,0.22)" :
     customization.base === "Caramel Gold"          ? "rgba(198,139,89,0.22)" :
     customization.base === "Dragonfruit Refresher" ? "rgba(224,17,95,0.22)" :
-                                                    "rgba(90,48,32,0.16)";
+                                                    "rgba(30,57,50,0.16)";
 
   // Per-combo card gradient pairs [inactive, active]
   const COMBO_BG = [
-    { inactive: "from-[#E8F5E0] to-[#C8E6CC] border-[#2B4D3D]/18 hover:border-[#2B4D3D]/40 text-[#1A3D28]",    active: "from-[#2B4D3D] to-[#1A3D28] border-transparent text-white" },
-    { inactive: "from-[#F7EDE7] to-[#E0C8B0] border-[#5A3020]/18 hover:border-[#5A3020]/40 text-[#2C1810]",    active: "from-[#5A3020] to-[#2C1810] border-transparent text-white" },
+    { inactive: "from-[#E8F5E0] to-[#C8E6CC] border-[#00704A]/18 hover:border-[#00704A]/40 text-[#00704A]",    active: "from-[#00704A] to-[#1E3932] border-transparent text-white" },
+    { inactive: "from-[#F2F0EB] to-[#E0C8B0] border-[#1E3932]/18 hover:border-[#1E3932]/40 text-[#1E3932]",    active: "from-[#1E3932] to-[#5C4033] border-transparent text-white" },
     { inactive: "from-[#FFF4E0] to-[#FFE5A0] border-[#C68B59]/18 hover:border-[#C68B59]/40 text-[#6B3800]",    active: "from-[#C68B59] to-[#8B5E00] border-transparent text-white" },
-    { inactive: "from-[#FFF0F8] to-[#FFCCE0] border-[#E0115F]/18 hover:border-[#E0115F]/40 text-[#7B0040]",    active: "from-[#E0115F] to-[#7B0040] border-transparent text-white" },
+    { inactive: "from-[#FFF0F8] to-[#FFCCE0] border-[#D81B60]/18 hover:border-[#D81B60]/40 text-[#7B0040]",    active: "from-[#D81B60] to-[#7B0040] border-transparent text-white" },
   ];
 
   // Get color for liquid
@@ -519,14 +526,14 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     const hasMilk = customization.milk !== "None";
     switch (customization.base) {
       case "Matcha Green":
-        return hasMilk ? "#8CAE93" : "#2B4D3D";
+        return hasMilk ? "#A4CBB0" : "#24583B";
       case "Caramel Gold":
-        return hasMilk ? "#C19A6C" : "#916F38";
+        return hasMilk ? "#D8BCA0" : "#A07137";
       case "Dragonfruit Refresher":
-        return hasMilk ? "#E46F9E" : "#E0115F";
+        return hasMilk ? "#F4B5CD" : "#D81B60";
       case "Cold Brew":
       default:
-        return hasMilk ? "#765C4E" : "#2C2421";
+        return hasMilk ? "#B69C85" : "#3D2314";
     }
   };
 
@@ -570,14 +577,14 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     <section id="builder" className="py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-12">
       {/* Title Header */}
       <div className="space-y-2 border-b border-[#2C2421]/5 pb-6">
-        <div className="flex items-center gap-2 text-xs font-bold text-[#2B4D3D] tracking-wider uppercase">
+        <div className="flex items-center gap-2 text-xs font-bold text-[#00704A] tracking-wider uppercase">
           <Sliders size={14} className="text-[#C68B59]" />
           <span>Co-Create & Mix</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-display font-black text-[#2C2421] tracking-tight">
+        <h2 className="text-4xl md:text-6xl font-display font-black text-[#1E3932] tracking-tight">
           Custom Drink Lab
         </h2>
-        <p className="text-sm md:text-base text-[#2C2421]/75 max-w-xl">
+        <p className="text-sm md:text-base text-[#1E3932]/75 max-w-xl">
           Unleash your inner barista. Customize every single layer of your drink, or load one of our popular secret-menu combos below.
         </p>
       </div>
@@ -621,7 +628,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
       {/* Dynamic Base Drink Bar (Menu selector) */}
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-2 text-xs font-bold text-[#2B4D3D] tracking-wider uppercase">
+        <div className="flex items-center gap-2 text-xs font-bold text-[#00704A] tracking-wider uppercase">
           <Sparkles size={14} />
           <span>Select Custom Drink Base</span>
         </div>
@@ -632,8 +639,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               onClick={() => onChangeCustomization((prev) => ({ ...prev, base: b.name }))}
               className={`px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 hover-scale ${
                 customization.base === b.name
-                  ? (BASE_STYLES[b.name]?.active ?? "bg-[#2B4D3D] text-[#F4F0EB]")
-                  : (BASE_STYLES[b.name]?.inactive ?? "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/8")
+                  ? (BASE_STYLES[b.name]?.active ?? "bg-[#00704A] text-[#F2F0EB]")
+                  : (BASE_STYLES[b.name]?.inactive ?? "bg-white text-[#1E3932] border border-[#1E3932]/8")
               }`}
             >
               {b.name}
@@ -648,54 +655,54 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
         {/* LEFT COLUMN: Drink Details & active customization summary (Col-span 4) */}
         <div className="lg:col-span-4 space-y-6">
           {/* Handcrafted Drink Title & Description Card */}
-          <div className="rounded-[32px] p-8 bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm space-y-4">
-            <span className="text-[10px] uppercase font-bold text-[#C0783E] tracking-wider">
+          <div className="rounded-[32px] p-8 bg-white border border-[#1E3932]/5 shadow-sm space-y-4">
+            <span className="text-[10px] uppercase font-bold text-[#C68B59] tracking-wider">
               {currentBase.category}
             </span>
-            <h3 className="text-4xl font-display font-extrabold text-[#2C2421] leading-[1.1] tracking-tight">
+            <h3 className="text-4xl font-display font-extrabold text-[#1E3932] leading-[1.1] tracking-tight">
               {customization.topping === "Cold Foam" ? "Matcha Foam " : ""}
               {customization.base}
             </h3>
-            <p className="text-xs md:text-sm text-[#2C2421]/75 leading-relaxed">
+            <p className="text-xs md:text-sm text-[#1E3932]/75 leading-relaxed">
               {currentBase.description}
             </p>
           </div>
 
           {/* Active Customizations list card */}
-          <div className="rounded-[32px] p-8 bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 text-[#C0783E]">
+          <div className="rounded-[32px] p-8 bg-white border border-[#1E3932]/5 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 text-[#C68B59]">
               <Sparkles size={16} />
               <h4 className="font-display font-bold text-sm tracking-wider uppercase">
                 Active Customizations
               </h4>
             </div>
             
-            <ul className="space-y-2 text-xs font-medium text-[#2C2421]/80">
+            <ul className="space-y-2 text-xs font-medium text-[#1E3932]/80">
               <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2B4D3D]" />
-                <span>Size: <strong className="text-[#2C2421]">{customization.size}</strong></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00704A]" />
+                <span>Size: <strong className="text-[#1E3932]">{customization.size}</strong></span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2B4D3D]" />
-                <span>Milk: <strong className="text-[#2C2421]">{customization.milk}</strong></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00704A]" />
+                <span>Milk: <strong className="text-[#1E3932]">{customization.milk}</strong></span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2B4D3D]" />
-                <span>Sweetener: <strong className="text-[#2C2421]">{customization.sweetener}</strong></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00704A]" />
+                <span>Sweetener: <strong className="text-[#1E3932]">{customization.sweetener}</strong></span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2B4D3D]" />
-                <span>Topping: <strong className="text-[#2C2421]">{customization.topping}</strong></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00704A]" />
+                <span>Topping: <strong className="text-[#1E3932]">{customization.topping}</strong></span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2B4D3D]" />
-                <span>Ice: <strong className="text-[#2C2421]">{customization.ice}</strong></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00704A]" />
+                <span>Ice: <strong className="text-[#1E3932]">{customization.ice}</strong></span>
               </li>
             </ul>
           </div>
 
           {/* Large Starbucks Dark Green Add to Order panel (Bottom Left placement) */}
-          <div className="rounded-[32px] p-8 bg-[#2B4D3D] text-[#F4F0EB] shadow-md space-y-4 relative overflow-hidden">
+          <div className="rounded-[32px] p-8 bg-[#00704A] text-[#F2F0EB] shadow-md space-y-4 relative overflow-hidden">
             {/* Ambient gold glow */}
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#C68B59]/20 rounded-full blur-2xl pointer-events-none" />
 
@@ -704,12 +711,12 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                 <h3 className="text-3xl font-display font-extrabold tracking-tight">
                   Add to Order
                 </h3>
-                <p className="text-[11px] text-[#F4F0EB]/70 font-medium mt-1">
+                <p className="text-[11px] text-[#F2F0EB]/70 font-medium mt-1">
                   Customized {customization.size}
                 </p>
               </div>
               
-              <div className="px-4 py-2 rounded-full bg-[#FAF8F5]/10 border border-[#FAF8F5]/10 text-base font-extrabold text-[#FAF8F5]">
+              <div className="px-4 py-2 rounded-full bg-[#F2F0EB]/10 border border-[#F2F0EB]/10 text-base font-extrabold text-[#F2F0EB]">
                 ${price}
               </div>
             </div>
@@ -720,7 +727,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full py-4 rounded-2xl bg-[#FAF8F5] text-[#2B4D3D] flex items-center justify-center gap-2 text-sm font-bold shadow-sm"
+                  className="w-full py-4 rounded-2xl bg-[#F2F0EB] text-[#00704A] flex items-center justify-center gap-2 text-sm font-bold shadow-sm"
                 >
                   <Check size={16} />
                   <span>Added successfully!</span>
@@ -733,7 +740,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                     setOrdered(true);
                     setTimeout(() => setOrdered(false), 3000);
                   }}
-                  className="w-full py-4 rounded-2xl bg-[#FAF8F5] text-[#2B4D3D] flex items-center justify-center gap-2 text-sm font-bold transition-custom hover-scale shadow-sm cursor-pointer hover:bg-[#FAF8F5]/90"
+                  className="w-full py-4 rounded-2xl bg-[#F2F0EB] text-[#00704A] flex items-center justify-center gap-2 text-sm font-bold transition-custom hover-scale shadow-sm cursor-pointer hover:bg-[#F2F0EB]/90"
                 >
                   <ShoppingBag size={16} />
                   <span>Checkout</span>
@@ -770,7 +777,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
             {/* Hint message */}
             <div className="absolute bottom-4 text-center">
-              <span className="text-[9px] font-bold tracking-widest text-[#2C2421]/50 uppercase select-none pointer-events-none">
+              <span className="text-[9px] font-bold tracking-widest text-[#1E3932]/50 uppercase select-none pointer-events-none">
                 Interactive 3D Drink Lab
               </span>
             </div>
@@ -781,7 +788,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
         <div className="lg:col-span-4 space-y-4">
           
           {/* Expandable Section: Size */}
-          <div className="rounded-[24px] bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="rounded-[24px] bg-white border border-[#1E3932]/5 shadow-sm overflow-hidden transition-all duration-300">
             <button
               onClick={() => toggleSection("size")}
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
@@ -791,18 +798,18 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   {customization.size[0] || "G"}
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
+                  <h4 className="text-sm font-extrabold text-[#1E3932] leading-none">
                     {customization.size}
                   </h4>
-                  <p className="text-[10px] text-[#2C2421]/60 mt-1 font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#1E3932]/60 mt-1 font-semibold uppercase tracking-wider">
                     {sizes.find((s) => s.id === customization.size)?.sub || "16 fl oz"}
                   </p>
                 </div>
               </div>
               <ChevronDown
                 size={18}
-                className={`text-[#2C2421]/40 transition-transform duration-300 ${
-                  expandedSection === "size" ? "rotate-180 text-[#2B4D3D]" : ""
+                className={`text-[#1E3932]/40 transition-transform duration-300 ${
+                  expandedSection === "size" ? "rotate-180 text-[#00704A]" : ""
                 }`}
               />
             </button>
@@ -814,7 +821,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                  className="border-t border-[#2C2421]/5 bg-[#FAF8F5]/40 overflow-hidden"
+                  className="border-t border-[#1E3932]/5 bg-white/40 overflow-hidden"
                 >
                   <div className="p-4 grid grid-cols-3 gap-2">
                     {sizes.map((s) => (
@@ -823,8 +830,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                         onClick={() => onChangeCustomization((prev) => ({ ...prev, size: s.id }))}
                         className={`py-3 px-2 rounded-xl text-center transition-custom hover-scale text-xs font-bold ${
                           customization.size === s.id
-                            ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                            : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/10 hover:border-[#2B4D3D]"
+                            ? "bg-[#00704A] text-[#F2F0EB]"
+                            : "bg-white text-[#1E3932] border border-[#1E3932]/10 hover:border-[#00704A]"
                         }`}
                       >
                         <div className="text-sm font-extrabold">{s.iconText}</div>
@@ -838,7 +845,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
           </div>
 
           {/* Expandable Section: Milk */}
-          <div className="rounded-[24px] bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="rounded-[24px] bg-white border border-[#1E3932]/5 shadow-sm overflow-hidden transition-all duration-300">
             <button
               onClick={() => toggleSection("milk")}
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
@@ -848,18 +855,18 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   <div className="w-3.5 h-3.5 rounded-full bg-[#0EA5E9]" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
+                  <h4 className="text-sm font-extrabold text-[#1E3932] leading-none">
                     {customization.milk === "None" ? "No Milk" : customization.milk}
                   </h4>
-                  <p className="text-[10px] text-[#2C2421]/60 mt-1 font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#1E3932]/60 mt-1 font-semibold uppercase tracking-wider">
                     {milks.find((m) => m.id === customization.milk)?.sub || "Oat Milk"}
                   </p>
                 </div>
               </div>
               <ChevronDown
                 size={18}
-                className={`text-[#2C2421]/40 transition-transform duration-300 ${
-                  expandedSection === "milk" ? "rotate-180 text-[#2B4D3D]" : ""
+                className={`text-[#1E3932]/40 transition-transform duration-300 ${
+                  expandedSection === "milk" ? "rotate-180 text-[#00704A]" : ""
                 }`}
               />
             </button>
@@ -871,7 +878,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                  className="border-t border-[#2C2421]/5 bg-[#FAF8F5]/40 overflow-hidden"
+                  className="border-t border-[#1E3932]/5 bg-white/40 overflow-hidden"
                 >
                   <div className="p-4 grid grid-cols-2 gap-2">
                     {milks.map((m) => (
@@ -880,8 +887,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                         onClick={() => onChangeCustomization((prev) => ({ ...prev, milk: m.id }))}
                         className={`py-3 px-3 rounded-xl text-left transition-custom hover-scale text-xs font-bold flex justify-between items-center ${
                           customization.milk === m.id
-                            ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                            : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/10 hover:border-[#2B4D3D]"
+                            ? "bg-[#00704A] text-[#F2F0EB]"
+                            : "bg-white text-[#1E3932] border border-[#1E3932]/10 hover:border-[#00704A]"
                         }`}
                       >
                         <div>
@@ -898,7 +905,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
           </div>
 
           {/* Expandable Section: Sweeteners */}
-          <div className="rounded-[24px] bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="rounded-[24px] bg-white border border-[#1E3932]/5 shadow-sm overflow-hidden transition-all duration-300">
             <button
               onClick={() => toggleSection("sweetener")}
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
@@ -908,18 +915,18 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   💧
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
+                  <h4 className="text-sm font-extrabold text-[#1E3932] leading-none">
                     {customization.sweetener === "None" ? "No Syrup" : customization.sweetener}
                   </h4>
-                  <p className="text-[10px] text-[#2C2421]/60 mt-1 font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#1E3932]/60 mt-1 font-semibold uppercase tracking-wider">
                     {sweeteners.find((s) => s.id === customization.sweetener)?.sub || "Caramel / Vanilla"}
                   </p>
                 </div>
               </div>
               <ChevronDown
                 size={18}
-                className={`text-[#2C2421]/40 transition-transform duration-300 ${
-                  expandedSection === "sweetener" ? "rotate-180 text-[#2B4D3D]" : ""
+                className={`text-[#1E3932]/40 transition-transform duration-300 ${
+                  expandedSection === "sweetener" ? "rotate-180 text-[#00704A]" : ""
                 }`}
               />
             </button>
@@ -931,7 +938,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                  className="border-t border-[#2C2421]/5 bg-[#FAF8F5]/40 overflow-hidden"
+                  className="border-t border-[#1E3932]/5 bg-white/40 overflow-hidden"
                 >
                   <div className="p-4 grid grid-cols-2 gap-2">
                     {sweeteners.map((s) => (
@@ -940,8 +947,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                         onClick={() => onChangeCustomization((prev) => ({ ...prev, sweetener: s.id }))}
                         className={`py-3 px-3 rounded-xl text-left transition-custom hover-scale text-xs font-bold flex justify-between items-center ${
                           customization.sweetener === s.id
-                            ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                            : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/10 hover:border-[#2B4D3D]"
+                            ? "bg-[#00704A] text-[#F2F0EB]"
+                            : "bg-white text-[#1E3932] border border-[#1E3932]/10 hover:border-[#00704A]"
                         }`}
                       >
                         <div>
@@ -958,7 +965,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
           </div>
 
           {/* Expandable Section: Toppings */}
-          <div className="rounded-[24px] bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="rounded-[24px] bg-white border border-[#1E3932]/5 shadow-sm overflow-hidden transition-all duration-300">
             <button
               onClick={() => toggleSection("topping")}
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
@@ -968,18 +975,18 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   ✨
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
+                  <h4 className="text-sm font-extrabold text-[#1E3932] leading-none">
                     {customization.topping === "None" ? "No Topping" : customization.topping}
                   </h4>
-                  <p className="text-[10px] text-[#2C2421]/60 mt-1 font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#1E3932]/60 mt-1 font-semibold uppercase tracking-wider">
                     {toppings.find((t) => t.id === customization.topping)?.sub || "Cold Foam / Cream"}
                   </p>
                 </div>
               </div>
               <ChevronDown
                 size={18}
-                className={`text-[#2C2421]/40 transition-transform duration-300 ${
-                  expandedSection === "topping" ? "rotate-180 text-[#2B4D3D]" : ""
+                className={`text-[#1E3932]/40 transition-transform duration-300 ${
+                  expandedSection === "topping" ? "rotate-180 text-[#00704A]" : ""
                 }`}
               />
             </button>
@@ -991,7 +998,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                  className="border-t border-[#2C2421]/5 bg-[#FAF8F5]/40 overflow-hidden"
+                  className="border-t border-[#1E3932]/5 bg-white/40 overflow-hidden"
                 >
                   <div className="p-4 grid grid-cols-2 gap-2">
                     {toppings.map((t) => (
@@ -1000,8 +1007,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                         onClick={() => onChangeCustomization((prev) => ({ ...prev, topping: t.id }))}
                         className={`py-3 px-3 rounded-xl text-left transition-custom hover-scale text-xs font-bold flex justify-between items-center ${
                           customization.topping === t.id
-                            ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                            : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/10 hover:border-[#2B4D3D]"
+                            ? "bg-[#00704A] text-[#F2F0EB]"
+                            : "bg-white text-[#1E3932] border border-[#1E3932]/10 hover:border-[#00704A]"
                         }`}
                       >
                         <div>
@@ -1018,7 +1025,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
           </div>
 
           {/* Expandable Section: Ice Level */}
-          <div className="rounded-[24px] bg-[#FAF8F5] border border-[#2C2421]/5 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="rounded-[24px] bg-white border border-[#1E3932]/5 shadow-sm overflow-hidden transition-all duration-300">
             <button
               onClick={() => toggleSection("ice")}
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
@@ -1028,18 +1035,18 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   🧊
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
+                  <h4 className="text-sm font-extrabold text-[#1E3932] leading-none">
                     {customization.ice === "None" ? "No Ice" : customization.ice}
                   </h4>
-                  <p className="text-[10px] text-[#2C2421]/60 mt-1 font-semibold uppercase tracking-wider">
+                  <p className="text-[10px] text-[#1E3932]/60 mt-1 font-semibold uppercase tracking-wider">
                     {ices.find((i) => i.id === customization.ice)?.sub || "Ice amount"}
                   </p>
                 </div>
               </div>
               <ChevronDown
                 size={18}
-                className={`text-[#2C2421]/40 transition-transform duration-300 ${
-                  expandedSection === "ice" ? "rotate-180 text-[#2B4D3D]" : ""
+                className={`text-[#1E3932]/40 transition-transform duration-300 ${
+                  expandedSection === "ice" ? "rotate-180 text-[#00704A]" : ""
                 }`}
               />
             </button>
@@ -1051,7 +1058,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                  className="border-t border-[#2C2421]/5 bg-[#FAF8F5]/40 overflow-hidden"
+                  className="border-t border-[#1E3932]/5 bg-white/40 overflow-hidden"
                 >
                   <div className="p-4 grid grid-cols-2 gap-2">
                     {ices.map((i) => (
@@ -1060,8 +1067,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
                         onClick={() => onChangeCustomization((prev) => ({ ...prev, ice: i.id }))}
                         className={`py-3 px-3 rounded-xl text-left transition-custom hover-scale text-xs font-bold flex justify-between items-center ${
                           customization.ice === i.id
-                            ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                            : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/10 hover:border-[#2B4D3D]"
+                            ? "bg-[#00704A] text-[#F2F0EB]"
+                            : "bg-white text-[#1E3932] border border-[#1E3932]/10 hover:border-[#00704A]"
                         }`}
                       >
                         <div>
