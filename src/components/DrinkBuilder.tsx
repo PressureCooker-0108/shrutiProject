@@ -486,6 +486,34 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
   const { price, calories, caffeine } = getStats();
 
+  // ── Per-base vivid color styles ──────────────────────────────
+  const BASE_STYLES: Record<string, { active: string; inactive: string }> = {
+    "Cold Brew":             { active: "bg-gradient-to-r from-[#2C1810] to-[#5A3020] text-[#FAF0E6] shadow-lg shadow-[#2C1810]/25",  inactive: "bg-[#F7EDE7] text-[#5A3020] border border-[#5A3020]/20 hover:border-[#5A3020]/50 hover:bg-[#EED8C8]" },
+    "Matcha Green":          { active: "bg-gradient-to-r from-[#1A3D28] to-[#2B4D3D] text-[#E0F4E8] shadow-lg shadow-[#2B4D3D]/25",  inactive: "bg-[#E8F5E0] text-[#2B4D3D] border border-[#2B4D3D]/20 hover:border-[#2B4D3D]/50 hover:bg-[#C8E6CC]" },
+    "Caramel Gold":          { active: "bg-gradient-to-r from-[#8B5E00] to-[#D4942A] text-white shadow-lg shadow-[#C68B59]/25",       inactive: "bg-[#FFF4E0] text-[#8B5E00] border border-[#C68B59]/20 hover:border-[#C68B59]/50 hover:bg-[#FFE5B0]" },
+    "Dragonfruit Refresher": { active: "bg-gradient-to-r from-[#7B0040] to-[#E0115F] text-white shadow-lg shadow-[#E0115F]/25",       inactive: "bg-[#FFF0F5] text-[#7B0040] border border-[#E0115F]/20 hover:border-[#E0115F]/50 hover:bg-[#FFCCE0]" },
+  };
+
+  const canvasBg =
+    customization.base === "Matcha Green"         ? "linear-gradient(155deg, #E8F5E0 0%, #B8DCC0 55%, #80C090 100%)" :
+    customization.base === "Caramel Gold"          ? "linear-gradient(155deg, #FFF4E0 0%, #FFD888 55%, #F0B040 100%)" :
+    customization.base === "Dragonfruit Refresher" ? "linear-gradient(155deg, #FFF0F8 0%, #FFB0D0 55%, #FF70A8 100%)" :
+                                                    "linear-gradient(155deg, #F7EDE7 0%, #E0C8B0 55%, #C8A080 100%)";
+
+  const canvasBorder =
+    customization.base === "Matcha Green"         ? "rgba(43,77,61,0.22)" :
+    customization.base === "Caramel Gold"          ? "rgba(198,139,89,0.22)" :
+    customization.base === "Dragonfruit Refresher" ? "rgba(224,17,95,0.22)" :
+                                                    "rgba(90,48,32,0.16)";
+
+  // Per-combo card gradient pairs [inactive, active]
+  const COMBO_BG = [
+    { inactive: "from-[#E8F5E0] to-[#C8E6CC] border-[#2B4D3D]/18 hover:border-[#2B4D3D]/40 text-[#1A3D28]",    active: "from-[#2B4D3D] to-[#1A3D28] border-transparent text-white" },
+    { inactive: "from-[#F7EDE7] to-[#E0C8B0] border-[#5A3020]/18 hover:border-[#5A3020]/40 text-[#2C1810]",    active: "from-[#5A3020] to-[#2C1810] border-transparent text-white" },
+    { inactive: "from-[#FFF4E0] to-[#FFE5A0] border-[#C68B59]/18 hover:border-[#C68B59]/40 text-[#6B3800]",    active: "from-[#C68B59] to-[#8B5E00] border-transparent text-white" },
+    { inactive: "from-[#FFF0F8] to-[#FFCCE0] border-[#E0115F]/18 hover:border-[#E0115F]/40 text-[#7B0040]",    active: "from-[#E0115F] to-[#7B0040] border-transparent text-white" },
+  ];
+
   // Get color for liquid
   const getLiquidColor = () => {
     const hasMilk = customization.milk !== "None";
@@ -561,28 +589,27 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
           Popular Custom Presets
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {POPULAR_COMBOS.map((combo) => {
+          {POPULAR_COMBOS.map((combo, comboIdx) => {
             const isActive = customization.base === combo.config.base &&
                              customization.milk === combo.config.milk &&
                              customization.sweetener === combo.config.sweetener &&
                              customization.topping === combo.config.topping &&
                              customization.ice === combo.config.ice;
+            const comboBg = COMBO_BG[comboIdx] ?? COMBO_BG[0];
             return (
               <button
                 key={combo.name}
                 onClick={() => onChangeCustomization(() => combo.config)}
-                className={`p-4 rounded-2xl text-left border transition-all duration-300 flex items-start gap-3 hover-scale cursor-pointer ${
-                  isActive
-                    ? "bg-[#2B4D3D] text-[#F4F0EB] border-transparent shadow-md"
-                    : "bg-[#FAF8F5]/80 hover:bg-white text-[#2C2421] border-[#2C2421]/5 hover:border-[#2B4D3D]/30 shadow-sm"
+                className={`p-4 rounded-2xl text-left border transition-all duration-500 flex items-start gap-3 hover-scale cursor-pointer bg-gradient-to-br ${
+                  isActive ? `${comboBg.active} shadow-lg` : `${comboBg.inactive} shadow-sm`
                 }`}
               >
                 <span className="text-2xl mt-0.5">{combo.emoji}</span>
                 <div>
-                  <div className={`text-xs font-extrabold ${isActive ? "text-[#FAF8F5]" : "text-[#2C2421]"}`}>
+                  <div className="text-xs font-extrabold">
                     {combo.name}
                   </div>
-                  <div className={`text-[10px] mt-1 font-medium leading-normal ${isActive ? "text-[#FAF8F5]/85" : "text-[#2C2421]/60"}`}>
+                  <div className="text-[10px] mt-1 font-medium leading-normal opacity-75">
                     {combo.description}
                   </div>
                 </div>
@@ -603,10 +630,10 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
             <button
               key={b.name}
               onClick={() => onChangeCustomization((prev) => ({ ...prev, base: b.name }))}
-              className={`px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-custom hover-scale ${
+              className={`px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 hover-scale ${
                 customization.base === b.name
-                  ? "bg-[#2B4D3D] text-[#F4F0EB]"
-                  : "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/8 hover:border-[#2B4D3D]/30"
+                  ? (BASE_STYLES[b.name]?.active ?? "bg-[#2B4D3D] text-[#F4F0EB]")
+                  : (BASE_STYLES[b.name]?.inactive ?? "bg-[#FAF8F5] text-[#2C2421] border border-[#2C2421]/8")
               }`}
             >
               {b.name}
@@ -718,7 +745,10 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
         {/* CENTER COLUMN: Large visualizer container with cream bg and Starbucks logo (Col-span 4) */}
         <div className="lg:col-span-4 w-full flex justify-center">
-          <div className="w-full rounded-[40px] p-6 bg-[#FAF6F2] border border-[#2C2421]/5 shadow-sm flex flex-col items-center relative min-h-[460px] justify-center overflow-hidden">
+          <div
+            className="w-full rounded-[40px] p-6 border shadow-lg flex flex-col items-center relative min-h-[460px] justify-center overflow-hidden transition-all duration-700"
+            style={{ background: canvasBg, borderColor: canvasBorder }}
+          >
             {/* Ambient Starbucks Siren logo backdrop */}
             <div className="absolute top-6 left-6 opacity-5 pointer-events-none">
               <img
@@ -757,7 +787,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#C0783E] text-[#F4F0EB] flex items-center justify-center font-bold text-base">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] text-white flex items-center justify-center font-bold text-base shadow-md shadow-amber-500/25">
                   {customization.size[0] || "G"}
                 </div>
                 <div>
@@ -814,8 +844,8 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full border-4 border-[#C0783E] flex items-center justify-center relative">
-                  <div className="w-3.5 h-3.5 rounded-full bg-[#C0783E]" />
+                <div className="w-10 h-10 rounded-full border-4 border-[#0EA5E9] flex items-center justify-center relative shadow-md shadow-sky-400/25">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#0EA5E9]" />
                 </div>
                 <div>
                   <h4 className="text-sm font-extrabold text-[#2C2421] leading-none">
@@ -874,7 +904,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#C0783E] flex items-center justify-center font-bold text-sm text-[#C0783E]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#EC4899] to-[#DB2777] flex items-center justify-center font-bold text-sm shadow-md shadow-pink-500/25">
                   💧
                 </div>
                 <div>
@@ -934,7 +964,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#C0783E] flex items-center justify-center font-bold text-sm text-[#C0783E]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] flex items-center justify-center font-bold text-sm shadow-md shadow-violet-500/25">
                   ✨
                 </div>
                 <div>
@@ -994,7 +1024,7 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
               className="w-full p-5 flex items-center justify-between text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#C0783E] flex items-center justify-center font-bold text-sm text-[#C0783E]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#06B6D4] to-[#0891B2] flex items-center justify-center font-bold text-sm shadow-md shadow-cyan-500/25">
                   🧊
                 </div>
                 <div>
