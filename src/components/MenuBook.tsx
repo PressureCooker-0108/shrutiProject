@@ -21,6 +21,7 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
   const [spreadIndex, setSpreadIndex] = useState<number>(0); // 0 = Cover, 1 to 6 = Categories, 7 = Back Cover
   const [isFlipping, setIsFlipping] = useState<boolean>(false);
   const [flipDirection, setFlipDirection] = useState<"next" | "prev" | null>(null);
+  const [targetSpreadIndex, setTargetSpreadIndex] = useState<number | null>(null);
 
   // Group items by category to construct spreads
   const coffeeItems = MENU_ITEMS.filter((item) => item.category === "Coffee");
@@ -100,16 +101,137 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
     if (isFlipping || targetIndex === spreadIndex) return;
 
     setFlipDirection(targetIndex > spreadIndex ? "next" : "prev");
+    setTargetSpreadIndex(targetIndex);
     setIsFlipping(true);
 
     setTimeout(() => {
       setSpreadIndex(targetIndex);
       setIsFlipping(false);
       setFlipDirection(null);
+      setTargetSpreadIndex(null);
     }, 600); // Match CSS transition duration
   };
 
   const currentSpread = spreads[spreadIndex];
+
+  const renderPage = (idx: number, side: "left" | "right") => {
+    if (idx < 0 || idx >= spreads.length) return null;
+
+    if (idx === 0) {
+      if (side === "left") {
+        return <div className="w-full h-full bg-[#1E3932] border-r border-black/5" />;
+      }
+      /* FRONT COVER */
+      return (
+        <div 
+          onClick={() => handleTurnPage(1)}
+          className="w-full h-full bg-[#1E3932] text-[#F2F0EB] flex flex-col items-center justify-center p-8 md:p-12 text-center cursor-pointer relative overflow-hidden group"
+        >
+          {/* Gold textures */}
+          <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full border border-white/5 opacity-10" />
+          <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full border border-white/5 opacity-10" />
+          
+          <div className="space-y-6 max-w-md relative z-10 group-hover:scale-102 transition-transform duration-500">
+            <div className="flex justify-center">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
+                alt="Starbucks Siren"
+                className="w-20 h-20 md:w-28 md:h-28 brightness-0 invert"
+              />
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-display font-black text-3xl md:text-5xl uppercase tracking-widest leading-none border-b-2 border-[#C68B59]/30 pb-4">
+                The Menu
+              </h3>
+              <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#C68B59] mt-2 flex items-center justify-center gap-1">
+                <Sparkles size={12} />
+                Strategic Rebrand Presentation
+                <Sparkles size={12} />
+              </p>
+            </div>
+            <p className="text-[10px] md:text-xs text-[#F2F0EB]/60 uppercase font-semibold tracking-wider pt-6 animate-pulse">
+              Click to Open Book
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (idx === 7) {
+      if (side === "right") {
+        return <div className="w-full h-full bg-[#1E3932]" />;
+      }
+      /* BACK COVER */
+      return (
+        <div 
+          onClick={() => handleTurnPage(0)}
+          className="w-full h-full bg-[#1E3932] text-[#F2F0EB] flex flex-col items-center justify-center p-8 text-center cursor-pointer relative overflow-hidden"
+        >
+          <div className="space-y-4 max-w-sm">
+            <h3 className="font-display font-black text-2xl uppercase tracking-widest text-[#C68B59]">
+              Starbucks
+            </h3>
+            <p className="text-xs text-[#F2F0EB]/50 leading-relaxed font-semibold">
+              Academic overhaul presentation. Designed for premium aesthetics, engaging micro-animations, and interactive co-creation.
+            </p>
+            <p className="text-[10px] text-[#F2F0EB]/40 uppercase tracking-wider pt-8">
+              Click to Close Book
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    /* STANDARD SPREAD */
+    const pageItems = side === "left" ? spreads[idx].leftPageItems : spreads[idx].rightPageItems;
+    const pageNum = side === "left" ? idx * 2 - 1 : idx * 2;
+    const isLeft = side === "left";
+
+    return (
+      <div className={`w-full h-full p-4 md:p-8 flex flex-col justify-between bg-white relative ${isLeft ? "border-r border-black/5" : ""}`}>
+        <div>
+          {/* Page Header */}
+          <div className="flex items-center justify-between border-b border-[#1E3932]/5 pb-2 mb-4">
+            <h4 className="font-display font-black text-xs md:text-sm uppercase tracking-wider text-[#00704A]">
+              {spreads[idx].title}
+            </h4>
+            <span className="text-[9px] font-bold text-[#1E3932]/45">Page {pageNum}</span>
+          </div>
+
+          {/* Page Items */}
+          <div className="space-y-3">
+            {pageItems.length > 0 ? (
+              pageItems.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => onSelectItem(item)}
+                  className="group p-3 rounded-2xl hover:bg-[#F2F0EB]/50 transition-all duration-300 cursor-pointer flex gap-4 items-center border border-transparent hover:border-[#1E3932]/5"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-12 h-12 md:w-16 md:h-16 object-cover rounded-xl shadow-sm group-hover:scale-102 transition-all duration-300"
+                  />
+                  <div className="flex-1 text-left">
+                    <h5 className="font-display font-extrabold text-xs md:text-sm text-[#1E3932] group-hover:text-[#00704A] transition-colors leading-tight">
+                      {item.name}
+                    </h5>
+                    <span className="text-[9px] uppercase font-bold text-[#1E3932]/50 tracking-wide mt-1 inline-block">
+                      ${item.price.toFixed(2)} • {item.calories} cal
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="h-32 flex items-center justify-center text-xs text-[#1E3932]/40 uppercase tracking-wider font-bold">
+                End of Section
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <section id="menu-section" className="py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-12 select-none">
@@ -184,146 +306,29 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
             )}
 
             {/* SPREAD CONTENT VIEWS */}
-            {spreadIndex === 0 ? (
-              /* FRONT COVER */
-              <div 
-                onClick={() => handleTurnPage(1)}
-                className="w-full h-full bg-[#1E3932] text-[#F2F0EB] flex flex-col items-center justify-center p-8 md:p-12 text-center cursor-pointer relative overflow-hidden group"
-              >
-                {/* Gold textures */}
-                <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full border border-white/5 opacity-10" />
-                <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full border border-white/5 opacity-10" />
-                
-                <div className="space-y-6 max-w-md relative z-10 group-hover:scale-102 transition-transform duration-500">
-                  <div className="flex justify-center">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/en/d/d3/Starbucks_Corporation_Logo.svg"
-                      alt="Starbucks Siren"
-                      className="w-20 h-20 md:w-28 md:h-28 brightness-0 invert"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-display font-black text-3xl md:text-5xl uppercase tracking-widest leading-none border-b-2 border-[#C68B59]/30 pb-4">
-                      The Menu
-                    </h3>
-                    <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-[#C68B59] mt-2 flex items-center justify-center gap-1">
-                      <Sparkles size={12} />
-                      Strategic Rebrand Presentation
-                      <Sparkles size={12} />
-                    </p>
-                  </div>
-                  <p className="text-[10px] md:text-xs text-[#F2F0EB]/60 uppercase font-semibold tracking-wider pt-6 animate-pulse">
-                    Click to Open Book
-                  </p>
-                </div>
-              </div>
-            ) : spreadIndex === 7 ? (
-              /* BACK COVER */
-              <div 
-                onClick={() => handleTurnPage(0)}
-                className="w-full h-full bg-[#1E3932] text-[#F2F0EB] flex flex-col items-center justify-center p-8 text-center cursor-pointer relative overflow-hidden"
-              >
-                <div className="space-y-4 max-w-sm">
-                  <h3 className="font-display font-black text-2xl uppercase tracking-widest text-[#C68B59]">
-                    Starbucks
-                  </h3>
-                  <p className="text-xs text-[#F2F0EB]/50 leading-relaxed font-semibold">
-                    Academic overhaul presentation. Designed for premium aesthetics, engaging micro-animations, and interactive co-creation.
-                  </p>
-                  <p className="text-[10px] text-[#F2F0EB]/40 uppercase tracking-wider pt-8">
-                    Click to Close Book
-                  </p>
-                </div>
-              </div>
-            ) : (
-              /* OPEN BOOK SPREAD (Left & Right pages) */
+            {!isFlipping ? (
               <>
-                {/* LEFT PAGE */}
-                <div className="flex-1 h-full p-4 md:p-8 flex flex-col justify-between bg-white border-r border-black/5 relative">
-                  <div>
-                    {/* Page Header */}
-                    <div className="flex items-center justify-between border-b border-[#1E3932]/5 pb-2 mb-4">
-                      <h4 className="font-display font-black text-xs md:text-sm uppercase tracking-wider text-[#00704A]">
-                        {currentSpread.title}
-                      </h4>
-                      <span className="text-[9px] font-bold text-[#1E3932]/45">Page {spreadIndex * 2 - 1}</span>
-                    </div>
-
-                    {/* Left Page Items */}
-                    <div className="space-y-3">
-                      {currentSpread.leftPageItems.map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => onSelectItem(item)}
-                          className="group p-3 rounded-2xl hover:bg-[#F2F0EB]/50 transition-all duration-300 cursor-pointer flex gap-4 items-center border border-transparent hover:border-[#1E3932]/5"
-                        >
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-12 h-12 md:w-16 md:h-16 object-cover rounded-xl shadow-sm group-hover:scale-102 transition-all duration-300"
-                          />
-                          <div className="flex-1 text-left">
-                            <h5 className="font-display font-extrabold text-xs md:text-sm text-[#1E3932] group-hover:text-[#00704A] transition-colors leading-tight">
-                              {item.name}
-                            </h5>
-                            <span className="text-[9px] uppercase font-bold text-[#1E3932]/50 tracking-wide mt-1 inline-block">
-                              ${item.price.toFixed(2)} • {item.calories} cal
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* RIGHT PAGE */}
-                <div className="flex-1 h-full p-4 md:p-8 flex flex-col justify-between bg-white relative">
-                  <div>
-                    {/* Page Header */}
-                    <div className="flex items-center justify-between border-b border-[#1E3932]/5 pb-2 mb-4">
-                      <h4 className="font-display font-black text-xs md:text-sm uppercase tracking-wider text-[#00704A]">
-                        {currentSpread.title}
-                      </h4>
-                      <span className="text-[9px] font-bold text-[#1E3932]/45">Page {spreadIndex * 2}</span>
-                    </div>
-
-                    {/* Right Page Items */}
-                    <div className="space-y-3">
-                      {currentSpread.rightPageItems.length > 0 ? (
-                        currentSpread.rightPageItems.map((item) => (
-                          <div
-                            key={item.id}
-                            onClick={() => onSelectItem(item)}
-                            className="group p-3 rounded-2xl hover:bg-[#F2F0EB]/50 transition-all duration-300 cursor-pointer flex gap-4 items-center border border-transparent hover:border-[#1E3932]/5"
-                          >
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-12 h-12 md:w-16 md:h-16 object-cover rounded-xl shadow-sm group-hover:scale-102 transition-all duration-300"
-                            />
-                            <div className="flex-1 text-left">
-                              <h5 className="font-display font-extrabold text-xs md:text-sm text-[#1E3932] group-hover:text-[#00704A] transition-colors leading-tight">
-                                {item.name}
-                              </h5>
-                              <span className="text-[9px] uppercase font-bold text-[#1E3932]/50 tracking-wide mt-1 inline-block">
-                                ${item.price.toFixed(2)} • {item.calories} cal
-                              </span>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="h-32 flex items-center justify-center text-xs text-[#1E3932]/40 uppercase tracking-wider font-bold">
-                          End of Section
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                {renderPage(spreadIndex, "left")}
+                {renderPage(spreadIndex, "right")}
+              </>
+            ) : (
+              <>
+                {flipDirection === "next" ? (
+                  <>
+                    {renderPage(spreadIndex, "left")}
+                    {renderPage(targetSpreadIndex!, "right")}
+                  </>
+                ) : (
+                  <>
+                    {renderPage(targetSpreadIndex!, "left")}
+                    {renderPage(spreadIndex, "right")}
+                  </>
+                )}
               </>
             )}
 
             {/* Page Flipping 3D overlay wrapper */}
-            {isFlipping && (
+            {isFlipping && targetSpreadIndex !== null && (
               <motion.div
                 initial={{ rotateY: flipDirection === "next" ? 0 : -180 }}
                 animate={{ rotateY: flipDirection === "next" ? -180 : 0 }}
@@ -332,13 +337,46 @@ export default function MenuBook({ onSelectItem }: MenuBookProps) {
                   transformOrigin: flipDirection === "next" ? "left center" : "right center",
                   left: flipDirection === "next" ? "50%" : "0%",
                   width: "50%",
-                  backfaceVisibility: "hidden",
+                  height: "100%",
                   transformStyle: "preserve-3d",
+                  zIndex: 40,
                 }}
-                className="absolute top-0 bottom-0 bg-white border border-black/10 z-30 shadow-md pointer-events-none"
+                className="absolute top-0 bottom-0 pointer-events-none"
               >
-                {/* Back side shading */}
-                <div className="absolute inset-0 bg-black/5 backface-hidden" />
+                {/* FRONT FACE OF FLIPPING PAGE */}
+                <div
+                  style={{
+                    backfaceVisibility: "hidden",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: 2,
+                  }}
+                >
+                  {flipDirection === "next"
+                    ? renderPage(spreadIndex, "right")
+                    : renderPage(spreadIndex, "left")}
+                </div>
+
+                {/* BACK FACE OF FLIPPING PAGE */}
+                <div
+                  style={{
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  {flipDirection === "next"
+                    ? renderPage(targetSpreadIndex, "left")
+                    : renderPage(targetSpreadIndex, "right")}
+                </div>
               </motion.div>
             )}
 
