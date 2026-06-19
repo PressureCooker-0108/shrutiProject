@@ -199,6 +199,19 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     liquidMesh.position.y = -0.1;
     cupGroup.add(liquidMesh);
 
+    // 2b. Sweetener Syrup Layer (bottom of the cup)
+    const syrupGeo = new THREE.CylinderGeometry(1.1, 1.06, 0.4, 32);
+    const syrupMat = new THREE.MeshPhysicalMaterial({
+      color: 0x844e18,
+      transparent: true,
+      opacity: 0,
+      roughness: 0.1,
+      transmission: 0.1,
+    });
+    const syrupMesh = new THREE.Mesh(syrupGeo, syrupMat);
+    syrupMesh.position.y = -2.0; // sits at the bottom inside the cup
+    cupGroup.add(syrupMesh);
+
     // 3. Stirrer / Spoon
     const stirrerGroup = new THREE.Group();
     
@@ -228,10 +241,10 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     stirrerGroup.rotation.x = Math.PI / 22;
     stirrerPivot.add(stirrerGroup);
 
-    // 4. Floating Ice Cubes
-    const iceCount = 6;
+    // 4. Floating Ice Cubes (floating near the top of the drink so they are visible!)
+    const iceCount = 8;
     const iceMeshes: THREE.Mesh[] = [];
-    const iceGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+    const iceGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
     const iceMat = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
       transparent: true,
@@ -242,12 +255,14 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
     });
 
     const icePositions = [
-      { x: -0.35, y: 1.0, z: -0.2, rotX: 0.2, rotY: 0.5, rotZ: 0.1 },
-      { x: 0.3, y: 0.6, z: 0.35, rotX: -0.4, rotY: 0.2, rotZ: -0.5 },
-      { x: -0.2, y: 0.1, z: 0.45, rotX: 0.5, rotY: -0.3, rotZ: 0.2 },
-      { x: 0.35, y: -0.4, z: -0.25, rotX: -0.2, rotY: 0.8, rotZ: 0.4 },
-      { x: -0.45, y: -0.9, z: 0.1, rotX: 0.3, rotY: 0.1, rotZ: -0.2 },
-      { x: 0.2, y: -1.3, z: 0.25, rotX: -0.1, rotY: 0.4, rotZ: 0.6 }
+      { x: -0.4, y: 1.5, z: -0.3, rotX: 0.2, rotY: 0.5, rotZ: 0.1 },
+      { x: 0.4, y: 1.4, z: 0.3, rotX: -0.4, rotY: 0.2, rotZ: -0.5 },
+      { x: -0.15, y: 1.6, z: 0.4, rotX: 0.5, rotY: -0.3, rotZ: 0.2 },
+      { x: 0.3, y: 1.3, z: -0.3, rotX: -0.2, rotY: 0.8, rotZ: 0.4 },
+      { x: -0.45, y: 1.2, z: 0.1, rotX: 0.3, rotY: 0.1, rotZ: -0.2 },
+      { x: 0.1, y: 1.5, z: 0.45, rotX: -0.1, rotY: 0.4, rotZ: 0.6 },
+      { x: -0.2, y: 1.7, z: -0.4, rotX: 0.6, rotY: -0.2, rotZ: 0.3 },
+      { x: 0.2, y: 1.6, z: -0.1, rotX: -0.3, rotY: 0.6, rotZ: -0.4 }
     ];
 
     for (let i = 0; i < iceCount; i++) {
@@ -259,33 +274,67 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
       iceMeshes.push(mesh);
     }
 
-    // 5. Toppings: Cold Foam & Whipped Cream
-    const foamGeo = new THREE.CylinderGeometry(1.51, 1.45, 0.6, 32);
-    const foamMat = new THREE.MeshStandardMaterial({
-      color: 0xfaf8f5,
-      transparent: true,
-      opacity: 0.95,
-      roughness: 0.85
+    // 5. Toppings
+    
+    // 5a. Cold Foam: Bubbly frothy foam layer sitting on top of the rim
+    const foamGroup = new THREE.Group();
+    const foamBaseGeo = new THREE.CylinderGeometry(1.48, 1.42, 0.45, 32);
+    const foamBaseMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.9
     });
-    const foamMesh = new THREE.Mesh(foamGeo, foamMat);
-    foamMesh.position.y = 1.8;
-    cupGroup.add(foamMesh);
+    const foamBaseMesh = new THREE.Mesh(foamBaseGeo, foamBaseMat);
+    foamBaseMesh.position.y = 1.85;
+    foamGroup.add(foamBaseMesh);
 
+    // Foam bubbles along the rim
+    const bubbleGeo = new THREE.SphereGeometry(0.18, 8, 8);
+    for (let b = 0; b < 12; b++) {
+      const bubble = new THREE.Mesh(bubbleGeo, foamBaseMat);
+      const angle = (b / 12) * Math.PI * 2;
+      const radius = 1.1 + Math.random() * 0.15;
+      bubble.position.set(Math.cos(angle) * radius, 2.05 + (Math.random() - 0.5) * 0.05, Math.sin(angle) * radius);
+      foamGroup.add(bubble);
+    }
+    cupGroup.add(foamGroup);
+
+    // 5b. Whipped Cream Dome
     const whipGroup = new THREE.Group();
     const whipBaseGeo = new THREE.CylinderGeometry(1.5, 1.35, 0.4, 16);
-    const whipBaseMesh = new THREE.Mesh(whipBaseGeo, foamMat);
+    const whipBaseMesh = new THREE.Mesh(whipBaseGeo, foamBaseMat);
     whipBaseMesh.position.y = 1.8;
     whipGroup.add(whipBaseMesh);
 
     for (let j = 0; j < 4; j++) {
       const scale = 1.0 - j * 0.24;
       const layerGeo = new THREE.TorusGeometry(0.7 * scale, 0.3 * scale, 10, 20);
-      const layerMesh = new THREE.Mesh(layerGeo, foamMat);
+      const layerMesh = new THREE.Mesh(layerGeo, foamBaseMat);
       layerMesh.rotation.x = Math.PI / 2;
       layerMesh.position.y = 2.0 + j * 0.35;
       whipGroup.add(layerMesh);
     }
     cupGroup.add(whipGroup);
+
+    // 5c. Cinnamon Dusting Group (dusting particles sitting on top of a thin latte foam disk)
+    const cinnamonGroup = new THREE.Group();
+    const cinFoamGeo = new THREE.CylinderGeometry(1.44, 1.42, 0.15, 32);
+    const cinFoamMesh = new THREE.Mesh(cinFoamGeo, foamBaseMat);
+    cinFoamMesh.position.y = 1.9;
+    cinnamonGroup.add(cinFoamMesh);
+
+    const cinGeo = new THREE.SphereGeometry(0.04, 6, 6);
+    const cinMat = new THREE.MeshStandardMaterial({
+      color: 0x8b5a2b, // Warm cinnamon brown
+      roughness: 0.9
+    });
+    for (let c = 0; c < 20; c++) {
+      const particle = new THREE.Mesh(cinGeo, cinMat);
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(Math.random()) * 1.25;
+      particle.position.set(Math.cos(angle) * r, 2.02 + Math.random() * 0.05, Math.sin(angle) * r);
+      cinnamonGroup.add(particle);
+    }
+    cupGroup.add(cinnamonGroup);
 
     // Animation frame tracking
     let animationFrameId: number;
@@ -307,47 +356,134 @@ export default function DrinkBuilder({ customization, onChangeCustomization }: D
 
       // Update liquid color based on base and milk selections
       let colorStyle = "#3D2314";
-      const hasMilk = current.milk !== "None";
-      switch (current.base) {
-        case "Matcha Green":
-          colorStyle = hasMilk ? "#A4CBB0" : "#24583B";
-          break;
-        case "Caramel Gold":
-          colorStyle = hasMilk ? "#D8BCA0" : "#A07137";
-          break;
-        case "Dragonfruit Refresher":
-          colorStyle = hasMilk ? "#F4B5CD" : "#D81B60";
-          break;
-        case "Cold Brew":
-        default:
-          colorStyle = hasMilk ? "#B69C85" : "#3D2314";
+      const milkType = current.milk;
+
+      if (milkType === "None") {
+        switch (current.base) {
+          case "Matcha Green":
+            colorStyle = "#184524";
+            break;
+          case "Caramel Gold":
+            colorStyle = "#945f21";
+            break;
+          case "Dragonfruit Refresher":
+            colorStyle = "#c51162";
+            break;
+          case "Cold Brew":
+          default:
+            colorStyle = "#23120b";
+        }
+      } else if (milkType === "Whole Milk") {
+        switch (current.base) {
+          case "Matcha Green":
+            colorStyle = "#a3d9b1";
+            break;
+          case "Caramel Gold":
+            colorStyle = "#e5c5a8";
+            break;
+          case "Dragonfruit Refresher":
+            colorStyle = "#fca6c5";
+            break;
+          case "Cold Brew":
+          default:
+            colorStyle = "#cfa88a";
+        }
+      } else if (milkType === "Oat Milk") {
+        switch (current.base) {
+          case "Matcha Green":
+            colorStyle = "#9ebc9e";
+            break;
+          case "Caramel Gold":
+            colorStyle = "#cca785";
+            break;
+          case "Dragonfruit Refresher":
+            colorStyle = "#e899b3";
+            break;
+          case "Cold Brew":
+          default:
+            colorStyle = "#b08868";
+        }
+      } else if (milkType === "Almond Milk") {
+        switch (current.base) {
+          case "Matcha Green":
+            colorStyle = "#8ca38c";
+            break;
+          case "Caramel Gold":
+            colorStyle = "#b08a68";
+            break;
+          case "Dragonfruit Refresher":
+            colorStyle = "#d687a1";
+            break;
+          case "Cold Brew":
+          default:
+            colorStyle = "#9c704c";
+        }
+      } else if (milkType === "Coconut Milk") {
+        switch (current.base) {
+          case "Matcha Green":
+            colorStyle = "#b5eed2";
+            break;
+          case "Caramel Gold":
+            colorStyle = "#eeddc5";
+            break;
+          case "Dragonfruit Refresher":
+            colorStyle = "#ffd4e5";
+            break;
+          case "Cold Brew":
+          default:
+            colorStyle = "#dfc5ab";
+        }
       }
       liquidMat.color.setStyle(colorStyle);
 
-      // Manage topping geometries
-      if (current.topping === "Cold Foam") {
-        foamMesh.visible = true;
-        whipGroup.visible = false;
-      } else if (current.topping === "Whipped Cream") {
-        foamMesh.visible = false;
-        whipGroup.visible = true;
+      // Sweetener Syrup layer at the bottom
+      if (current.sweetener === "Caramel Syrup") {
+        syrupMesh.visible = true;
+        syrupMat.color.setStyle("#844e18");
+        syrupMat.opacity = 0.9;
+      } else if (current.sweetener === "Vanilla Syrup") {
+        syrupMesh.visible = true;
+        syrupMat.color.setStyle("#eae3d2");
+        syrupMat.opacity = 0.7;
+      } else if (current.sweetener === "Classic Syrup") {
+        syrupMesh.visible = true;
+        syrupMat.color.setStyle("#ffffff");
+        syrupMat.opacity = 0.55;
       } else {
-        foamMesh.visible = false;
+        syrupMesh.visible = false;
+      }
+
+      // Topping visibility
+      if (current.topping === "Cold Foam") {
+        foamGroup.visible = true;
         whipGroup.visible = false;
+        cinnamonGroup.visible = false;
+      } else if (current.topping === "Whipped Cream") {
+        foamGroup.visible = false;
+        whipGroup.visible = true;
+        cinnamonGroup.visible = false;
+      } else if (current.topping === "Cinnamon") {
+        foamGroup.visible = false;
+        whipGroup.visible = false;
+        cinnamonGroup.visible = true;
+      } else {
+        foamGroup.visible = false;
+        whipGroup.visible = false;
+        cinnamonGroup.visible = false;
       }
 
       // Update ice cube visibilities and floating animation
       let visibleIce = 0;
-      if (current.ice === "Light") visibleIce = 2;
-      else if (current.ice === "Regular") visibleIce = 4;
-      else if (current.ice === "Extra Ice") visibleIce = 6;
+      if (current.ice === "Light") visibleIce = 3;
+      else if (current.ice === "Regular") visibleIce = 5;
+      else if (current.ice === "Extra Ice") visibleIce = 8;
 
       for (let i = 0; i < iceCount; i++) {
         iceMeshes[i].visible = i < visibleIce;
         if (iceMeshes[i].visible) {
           const t = Date.now() * 0.0015 + i;
-          iceMeshes[i].position.y = icePositions[i].y + Math.sin(t) * 0.05;
-          iceMeshes[i].rotation.x = icePositions[i].rotX + Math.cos(t * 0.4) * 0.04;
+          iceMeshes[i].position.y = icePositions[i].y + Math.sin(t) * 0.04;
+          iceMeshes[i].rotation.x = icePositions[i].rotX + Math.cos(t * 0.4) * 0.03;
         }
       }
 
